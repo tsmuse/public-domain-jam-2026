@@ -27,7 +27,6 @@ extends Node2D
 @onready var player = $CharacterBody2D
 @onready var controller = $CharacterBody2D/PlayerController
 @onready var pusher = $Pusher
-@onready var pusher_timer = $Pusher/Timer
 
 var last_velocity := Vector2.ZERO
 
@@ -55,7 +54,6 @@ func _ready():
 	jumpb_label.text = "Jump Buffer: %s" % controller.jump_buffer
 	tv_label.text = "Terminal Velocity: %s x G" % controller.terminal_velocity
 	
-	pusher_timer.start()
 
 func _process(_delta):
 	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
@@ -81,7 +79,7 @@ func _process(_delta):
 	#coyote_label.text = "Coyote Time: %s" % controller.coyote_time
 	#jumpb_label.text = "Jump Buffer: %s" % controller.jump_buffer
 	#tv_label.text = "Terminal Velocity: %s x G" % controller.terminal_velocity
+	
 
-
-func _on_timer_timeout() -> void:
-	pusher.position.x += 32
+func _physics_process(delta: float) -> void:
+	pusher.position.x += pusher.speed * delta
