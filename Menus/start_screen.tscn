@@ -1,0 +1,54 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4alor4j6s2dk"]
+
+[ext_resource type="Script" uid="uid://b2rx2i1by0d3n" path="res://Menus/start_screen.gd" id="1_ptl1s"]
+
+[node name="StartScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ptl1s")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.75
+anchor_right = 0.5
+anchor_bottom = 0.75
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Start" type="Button" parent="GridContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Start"
+
+[node name="Settings" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Settings"
+
+[node name="Quit" type="Button" parent="GridContainer"]
+layout_mode = 2
+text = "Quit"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="Version" type="Label" parent="MarginContainer"]
+layout_mode = 2
+
+[connection signal="button_up" from="GridContainer/Start" to="." method="_on_start_button_up"]
+[connection signal="button_up" from="GridContainer/Settings" to="." method="_on_settings_button_up"]
+[connection signal="button_up" from="GridContainer/Quit" to="." method="_on_quit_button_up"]

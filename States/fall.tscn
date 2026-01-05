@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://wh0ylmyle3ah"]
+
+[ext_resource type="Script" uid="uid://bhipgetkbug1m" path="res://States/player_fall.gd" id="1_7mim0"]
+
+[node name="fall" type="Node" node_paths=PackedStringArray("run_state", "jump_state", "idle_state")]
+script = ExtResource("1_7mim0")
+run_state = NodePath("")
+jump_state = NodePath("")
+idle_state = NodePath("")
