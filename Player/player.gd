@@ -1,6 +1,8 @@
 extends CharacterBody2D
 
 @onready var controller := $PlayerController
+@onready var hookshot := $Hookshot
+@onready var sprite := $Sprite2D
 
 var temp := AnimatedSprite2D.new()
 
@@ -15,3 +17,7 @@ func _unhandled_input(event):
 
 func _process(delta):
 	controller.process_frame(delta)
+
+func fire_hookshot():
+	if(hookshot.is_colliding()):
+		print("Hookshot hit!")

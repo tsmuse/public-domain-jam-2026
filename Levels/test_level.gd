@@ -24,8 +24,8 @@ extends Node2D
 @onready var jumpb_label = $UI/Settings/HBoxContainer/VBoxContainer3/jumpBuffer
 @onready var tv_label = $UI/Settings/HBoxContainer/VBoxContainer3/terminalVelocity
 
-@onready var player = $CharacterBody2D
-@onready var controller = $CharacterBody2D/PlayerController
+@onready var player = $Player
+@onready var controller = $Player/PlayerController
 @onready var pusher = $Pusher
 
 var last_velocity := Vector2.ZERO
@@ -82,4 +82,5 @@ func _process(_delta):
 	
 
 func _physics_process(delta: float) -> void:
-	pusher.position.x += pusher.speed * delta
+	pass
+	#pusher.position.x += pusher.speed * delta

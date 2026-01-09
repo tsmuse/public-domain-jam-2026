@@ -32,6 +32,8 @@ func process_input(_evt: InputEvent) -> State:
 			controller.jump_buffering = true
 	elif controller.air_control > 0 and controller.get_movement_direction() != Vector2.ZERO:
 		return run_state
+	elif controller.wants_to_action():
+		parent.fire_hookshot()
 	return null
 
 ## Called by the parent's _process lifecycle function. Any non-physics related logic goes here. 

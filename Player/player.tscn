@@ -11,12 +11,21 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s0aty"]
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(15, 242)
 collision_mask = 2
 script = ExtResource("1_0vmvt")
 
 [node name="PlayerController" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
 script = ExtResource("2_ffjx4")
+max_accel = 1090.0
+max_decel = 1440.0
+down_gravity = 6.3
+max_air_accel = 610.0
+air_brake = 610.0
+air_control = 2280.0
+variable_height = true
+air_jump = true
+concurent_air_jumps = 2
+coyote_time = 1.4
 initial_state = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="PlayerController" node_paths=PackedStringArray("run_state", "jump_state", "fall_state")]
@@ -48,5 +57,12 @@ shape = SubResource("CapsuleShape2D_s0aty")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("7_l8lhr")
+flip_h = true
 region_enabled = true
 region_rect = Rect2(2, 1, 20, 23)
+
+[node name="Hookshot" type="RayCast2D" parent="."]
+position = Vector2(-4.7683716e-07, -2.3841858e-07)
+rotation = -1.829105
+target_position = Vector2(0, 150)
+collision_mask = 2

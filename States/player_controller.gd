@@ -76,3 +76,6 @@ func get_movement_direction() -> Vector2:
 
 func wants_to_jump() -> bool:
 	return Input.is_action_just_pressed("player_jump")
+
+func wants_to_action() -> bool:
+	return Input.is_action_just_pressed("player_action")

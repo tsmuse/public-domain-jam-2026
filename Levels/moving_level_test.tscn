@@ -1,15 +1,10 @@
-[gd_scene load_steps=17 format=4 uid="uid://0me70y87m6bp"]
+[gd_scene load_steps=11 format=4 uid="uid://0me70y87m6bp"]
 
 [ext_resource type="Script" uid="uid://cfv4knhtngyp6" path="res://Levels/test_level.gd" id="1_crp8a"]
 [ext_resource type="TileSet" uid="uid://usyi1f352fk7" path="res://Sprites/level.tres" id="2_0ue8m"]
+[ext_resource type="PackedScene" uid="uid://t3a8xnf5m5yv" path="res://Player/player.tscn" id="2_r7gqo"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_647gb"]
 [ext_resource type="Script" uid="uid://crcafyukj7osr" path="res://Levels/pusher.gd" id="4_0ue8m"]
-[ext_resource type="Script" uid="uid://bardlq0oi5t1y" path="res://Levels/testPlayer.gd" id="4_tk0td"]
-[ext_resource type="PackedScene" uid="uid://bqfyfqhb5fohv" path="res://States/player_controller.tscn" id="5_dklkb"]
-[ext_resource type="PackedScene" uid="uid://8jr8n02pbw7g" path="res://States/idle.tscn" id="6_s8o6q"]
-[ext_resource type="PackedScene" uid="uid://co3cnkvman01u" path="res://States/run.tscn" id="7_5uvh2"]
-[ext_resource type="PackedScene" uid="uid://ckuvx42cxr8bs" path="res://States/jump.tscn" id="8_n8nx6"]
-[ext_resource type="PackedScene" uid="uid://wh0ylmyle3ah" path="res://States/fall.tscn" id="9_0hptf"]
 [ext_resource type="Texture2D" uid="uid://co8jbmkqdsc02" path="res://Sprites/kittyKongPrototypeSpriteSheet.png" id="10_7c4jy"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="11_efra8"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="12_pirpk"]
@@ -17,15 +12,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_crp8a"]
 size = Vector2(53, 827)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dlqo7"]
-radius = 30.0
-height = 110.0
-
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("12_pirpk")
 
 [node name="TestLevel" type="Node2D"]
 script = ExtResource("1_crp8a")
+
+[node name="Player" parent="." instance=ExtResource("2_r7gqo")]
+position = Vector2(35, 688)
+collision_mask = 6
 
 [node name="TileLayers" type="Node2D" parent="."]
 
@@ -37,7 +32,7 @@ rendering_quadrant_size = 32
 
 [node name="Camera2D" type="Camera2D" parent="."]
 physics_interpolation_mode = 1
-position = Vector2(59, 637)
+position = Vector2(35, 688)
 process_callback = 0
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D"]
@@ -62,61 +57,12 @@ region_enabled = true
 region_rect = Rect2(768, 63, 133, 130)
 region_filter_clip_enabled = true
 
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(59, 637)
-collision_mask = 6
-script = ExtResource("4_tk0td")
-
-[node name="PlayerController" parent="CharacterBody2D" node_paths=PackedStringArray("initial_state") instance=ExtResource("5_dklkb")]
-position = Vector2(-51, -637)
-max_speed = 2790.0
-max_accel = 1230.0
-max_decel = 2340.0
-turn_speed = 4450.0
-jump_height = 200.0
-down_gravity = 2.5
-max_air_accel = 270.0
-air_brake = 320.0
-air_control = 1600.0
-variable_height = true
-air_jump = true
-concurent_air_jumps = 3
-initial_state = NodePath("idle")
-
-[node name="idle" parent="CharacterBody2D/PlayerController" node_paths=PackedStringArray("run_state", "jump_state", "fall_state") instance=ExtResource("6_s8o6q")]
-run_state = NodePath("../run")
-jump_state = NodePath("../jump")
-fall_state = NodePath("../fall")
-
-[node name="run" parent="CharacterBody2D/PlayerController" node_paths=PackedStringArray("idle_state", "jump_state", "fall_state") instance=ExtResource("7_5uvh2")]
-idle_state = NodePath("../idle")
-jump_state = NodePath("../jump")
-fall_state = NodePath("../fall")
-
-[node name="jump" parent="CharacterBody2D/PlayerController" node_paths=PackedStringArray("idle_state", "run_state", "fall_state") instance=ExtResource("8_n8nx6")]
-idle_state = NodePath("../idle")
-run_state = NodePath("../run")
-fall_state = NodePath("../fall")
-
-[node name="fall" parent="CharacterBody2D/PlayerController" node_paths=PackedStringArray("run_state", "jump_state", "idle_state") instance=ExtResource("9_0hptf")]
-run_state = NodePath("../run")
-jump_state = NodePath("../jump")
-idle_state = NodePath("../idle")
-
-[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-texture = ExtResource("10_7c4jy")
-region_enabled = true
-region_rect = Rect2(192, 88, 67, 107)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-shape = SubResource("CapsuleShape2D_dlqo7")
-
 [node name="PhantomCamera2D" type="Node2D" parent="." node_paths=PackedStringArray("follow_target")]
 top_level = true
-position = Vector2(59, 637)
+position = Vector2(35, 688)
 script = ExtResource("11_efra8")
 follow_mode = 5
-follow_target = NodePath("../CharacterBody2D")
+follow_target = NodePath("../Player")
 tween_resource = SubResource("Resource_lrol0")
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 

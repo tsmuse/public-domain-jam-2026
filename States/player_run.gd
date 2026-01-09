@@ -30,6 +30,8 @@ func process_input(_evt: InputEvent) -> State:
 			return jump_state
 		elif controller.jump_buffer > 0 and not controller.jump_buffering:
 			controller.jump_buffering = true
+	elif controller.wants_to_action():
+		parent.fire_hookshot()
 	return null
 
 ## Called by the parent's _process lifecycle function. Any non-physics related logic goes here. 
@@ -42,13 +44,16 @@ func process_physics(delta: float)-> State:
 	var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 	var terminal_velocity = gravity * controller.terminal_velocity
 	var on_floor := parent.is_on_floor()
-	var direction_x := controller.get_movement_direction().x
+	var direction := controller.get_movement_direction()
+	var direction_x := direction.x
 	var desired_velocity := Vector2(direction_x, 0.0) * controller.max_speed
 	var acceleration := controller.max_accel if on_floor else controller.max_air_accel
 	var deceleration := controller.max_decel if on_floor else controller.air_brake
 	var turn_speed := controller.turn_speed if on_floor else controller.air_control
 	var max_speed_change := deceleration * delta
 	var falling_after_jump = controller.player_jumping
+	
+	var hookshot :RayCast2D = parent.hookshot
 	
 	# Update the Coyote Time Counter and Jump buffer
 	if not on_floor:
@@ -70,24 +75,46 @@ func process_physics(delta: float)-> State:
 		else:
 			velocity.y += gravity * delta 
 	
+	#set hookshot direction
+	if direction.y <= 0:
+		if direction.x > 0:
+			hookshot.rotation_degrees = -104.8
+		elif direction.x < 0:
+			hookshot.rotation_degrees = 104.8
+		else:
+			hookshot.rotation_degrees = -180.0
+	else:
+		if direction.x > 0:
+			hookshot.rotation_degrees = -71.8
+		elif direction.x < 0:
+			hookshot.rotation_degrees = 71.8
+		else:
+			hookshot.rotation_degrees = 0.0
 	# if the player is moving
 	if direction_x != 0:
+		# if changing direction flip the sprite
+		parent.sprite.flip_h = sign(direction_x) > 0
+		
 		# if the player is changing direction
 		if sign(direction_x) != sign(velocity.x):
 			max_speed_change = controller.turn_speed * delta
+			 
 		else:
 			max_speed_change = acceleration * delta
 			
 		velocity.x = move_toward(velocity.x, desired_velocity.x, max_speed_change)
 		parent.velocity = velocity
 		parent.move_and_slide()
-	elif on_floor:
+	elif on_floor and direction.y == 0:
 		controller.coyote_time_counter = 0.0
 		if controller.jump_buffering and controller.jump_buffer_counter < controller.jump_buffer:
 			print("Run: Jump Buffer Jump!")
 			return jump_state
 		
 		return idle_state
+	elif on_floor:
+		# just chillin' aiming the hookshot straight up or straight down
+		pass
 	else:
 		return fall_state
 	

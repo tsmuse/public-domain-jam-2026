@@ -41,6 +41,8 @@ func process_input(_evt: InputEvent) -> State:
 			print("Jump: Double Jumped!")
 		else:
 			print("Jump: Random Jump requested")
+	elif controller.wants_to_action():
+		parent.fire_hookshot()
 	return null
 
 ## Called by the parent's _process lifecycle function. Any non-physics related logic goes here. 
