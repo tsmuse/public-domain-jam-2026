@@ -1,0 +1,60 @@
+[gd_scene load_steps=8 format=3 uid="uid://c30tdpt42w1cv"]
+
+[ext_resource type="Script" uid="uid://bqcm81j22y0ue" path="res://Player/player_3p.gd" id="1_4obhj"]
+[ext_resource type="Script" uid="uid://bl0p5bckrjnpu" path="res://States/player_controller.gd" id="2_skw0d"]
+[ext_resource type="PackedScene" uid="uid://clq240psw1503" path="res://States/idle_3p.tscn" id="3_4obhj"]
+[ext_resource type="PackedScene" uid="uid://dc4eilmtn5mwi" path="res://States/run_3p.tscn" id="4_6lknf"]
+[ext_resource type="Texture2D" uid="uid://b6a0duqgp3uor" path="res://Sprites/tilemap-characters.png" id="7_aow06"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s0aty"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6lknf"]
+
+[node name="Player" type="CharacterBody2D"]
+collision_mask = 2
+script = ExtResource("1_4obhj")
+
+[node name="PlayerController" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_skw0d")
+max_accel = 1090.0
+max_decel = 1440.0
+down_gravity = 6.3
+max_air_accel = 610.0
+air_brake = 610.0
+air_control = 2280.0
+variable_height = true
+air_jump = true
+concurent_air_jumps = 2
+coyote_time = 1.4
+initial_state = NodePath("idle")
+
+[node name="idle" parent="PlayerController" node_paths=PackedStringArray("run_state") instance=ExtResource("3_4obhj")]
+run_state = NodePath("../run")
+
+[node name="run" parent="PlayerController" node_paths=PackedStringArray("idle_state") instance=ExtResource("4_6lknf")]
+idle_state = NodePath("../idle")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_s0aty")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("7_aow06")
+flip_h = true
+region_enabled = true
+region_rect = Rect2(2, 1, 20, 23)
+
+[node name="Hookshot" type="RayCast2D" parent="."]
+position = Vector2(-4.7683716e-07, -2.3841858e-07)
+rotation = -1.829105
+target_position = Vector2(0, 150)
+collision_mask = 2
+
+[node name="DispairDetector" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DispairDetector"]
+shape = SubResource("CapsuleShape2D_6lknf")
+debug_color = Color(0.9372297, 1.540184e-05, 0.6309754, 0.41960785)
+
+[connection signal="body_entered" from="DispairDetector" to="." method="_on_dispair_detector_body_entered"]
+[connection signal="body_exited" from="DispairDetector" to="." method="_on_dispair_detector_body_exited"]

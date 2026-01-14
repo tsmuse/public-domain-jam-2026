@@ -24,9 +24,17 @@ extends Node2D
 @onready var jumpb_label = $UI/Settings/HBoxContainer/VBoxContainer3/jumpBuffer
 @onready var tv_label = $UI/Settings/HBoxContainer/VBoxContainer3/terminalVelocity
 
-@onready var player = $Player
-@onready var controller = $Player/PlayerController
-@onready var pusher = $Pusher
+@onready var player := $Player
+@onready var controller := $Player/PlayerController
+
+@onready var dispair := $TileLayers/Dispair
+@onready var dispair_timer := $DispairTimer
+
+var dispair_source_id := 0
+var dispair_atlas_coord := Vector2i(5,5)
+var dispair_start_coord := Vector2i(-5,-5)
+var dispair_next_line := Vector2i(166,72)
+var dispair_should_grow := false
 
 var last_velocity := Vector2.ZERO
 
@@ -59,6 +67,29 @@ func _process(_delta):
 	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
 	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
 	
+	if dispair_should_grow:
+		var far_x = dispair_start_coord.x + dispair_next_line.x
+		var far_y = dispair_start_coord.y + dispair_next_line.y
+		# draw a line from start_coord to (start_coord.x + next_line.x, start_coord.y)
+		for i in range(dispair_next_line.x):
+			# todo: check all the tiles around and fill in blank tile instead
+			dispair.set_cell(Vector2i(dispair_start_coord.x + i, dispair_start_coord.y), dispair_source_id, dispair_atlas_coord)
+		# draw a line from (start_coord.x + next_line.x, start_coord.y) to (start_coord.x + next_line.x, start_coord.y + next_line.y)
+		for i in range(dispair_next_line.y):
+			# todo: check all the tiles around and fill in blank tile instead
+			dispair.set_cell(Vector2i(far_x, dispair_start_coord.y + i), dispair_source_id, dispair_atlas_coord)
+		# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to (start_coord.x, start_coord.y + next_line.y)
+		for i in range(dispair_next_line.x):
+			# todo: check all the tiles around and fill in blank tile instead
+			dispair.set_cell(Vector2i(far_x - i, far_y), dispair_source_id, dispair_atlas_coord)
+		# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
+		for i in range(dispair_next_line.y):
+			# todo: check all the tiles around and fill in blank tile instead
+			dispair.set_cell(Vector2i(dispair_start_coord.x, far_y - i), dispair_source_id, dispair_atlas_coord)
+		dispair_start_coord = dispair_start_coord + Vector2i(1,1)
+		dispair_next_line = dispair_next_line - Vector2i(2,2)
+		dispair_should_grow = false
+	
 	# enable these if you're actually changing them while the game it running
 	#speed_label.text = "Max Speed: %s" % controller.max_speed
 	#acel_label.text = "Max Acel: %s" % controller.max_accel
@@ -83,8 +114,8 @@ func _process(_delta):
 
 func _physics_process(delta: float) -> void:
 	pass
-	#pusher.position.x += pusher.speed * delta
+	
 
 
 func _on_dispair_timer_timeout() -> void:
-	pass # Replace with function body.
+	dispair_should_grow = true
