@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=4 uid="uid://bme0iv3pa6ici"]
+
+[ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="1_e5jew"]
+[ext_resource type="Script" uid="uid://sun2fbq1mjrm" path="res://quarter_note.gd" id="1_rkou8"]
+
+[sub_resource type="Animation" id="Animation_rkou8"]
+resource_name = "test"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e5nu0"]
+_data = {
+&"test": SubResource("Animation_rkou8")
+}
+
+[node name="QuarterNote" type="Node2D"]
+script = ExtResource("1_rkou8")
+
+[node name="Note" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAD8////AAAIAAMAAAD9////AAAJAAMAAAD+////AAAJAAMAAAD/////AAAJAAMAAAAAAP//AAAJAAMAAAABAP//AAAJAAMAAAACAP//AAAJAAMAAAADAP//AAAJAAMAAAAEAP//AAAJAAMAAAAFAP//AAAKAAMAAAAFAAAAAAAKAAQAAAAFAAEAAAAKAAQAAAAFAAIAAAAKAAQAAAAFAAMAAAAKAAQAAAAFAAQAAAAKAAQAAAAFAAUAAAAKAAQAAAAFAAYAAAAKAAQAAAAFAAcAAAAKAAQAAAAFAP7/AAAKAAQAAAAFAP3/AAAKAAQAAAAFAPz/AAAKAAQAAAAFAPv/AAAKAAQAAAAFAPr/AAAKAAQAAAAFAPn/AAAKAAQAAAAFAPj/AAAKAAQAAAAFAPf/AAAKAAQAAAAFAPb/AAAKAAQAAAAFAPX/AAAKAAQAAAAFAPT/AAAKAAQAAAAFAPP/AAAKAAQAAAAFAPL/AAAKAAQAAAAFAPH/AAAKAAQAAAAFAPD/AAALAAMAAAD8/wgAAAAIAAUAAAD8/wAAAAAIAAQAAAD8/wEAAAAIAAQAAAD8/wIAAAAIAAQAAAD8/wMAAAAIAAQAAAD8/wQAAAAIAAQAAAD8/wUAAAAIAAQAAAD8/wYAAAAIAAQAAAD8/wcAAAAIAAQAAAD9/wgAAAAJAAMAAAD+/wgAAAAJAAMAAAD//wgAAAAJAAMAAAAAAAgAAAAJAAMAAAABAAgAAAAJAAMAAAACAAgAAAAJAAMAAAADAAgAAAAJAAMAAAAEAAgAAAAJAAMAAAAFAAgAAAAKAAUAAAA=")
+tile_set = ExtResource("1_e5jew")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+autostart = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_e5nu0")
+}
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
