@@ -49,12 +49,12 @@ rotation = -1.829105
 target_position = Vector2(0, 150)
 collision_mask = 2
 
-[node name="DispairDetector" type="Area2D" parent="."]
+[node name="DespairDetector" type="Area2D" parent="."]
 collision_mask = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="DispairDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DespairDetector"]
 shape = SubResource("CapsuleShape2D_6lknf")
 debug_color = Color(0.9372297, 1.540184e-05, 0.6309754, 0.41960785)
 
-[connection signal="body_entered" from="DispairDetector" to="." method="_on_dispair_detector_body_entered"]
-[connection signal="body_exited" from="DispairDetector" to="." method="_on_dispair_detector_body_exited"]
+[connection signal="body_entered" from="DespairDetector" to="." method="_on_despair_detector_body_entered"]
+[connection signal="body_exited" from="DespairDetector" to="." method="_on_despair_detector_body_exited"]

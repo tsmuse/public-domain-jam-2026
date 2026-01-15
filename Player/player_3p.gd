@@ -3,6 +3,10 @@ extends CharacterBody2D
 @onready var controller := $PlayerController
 @onready var hookshot := $Hookshot
 @onready var sprite := $Sprite2D
+@onready var despair_detector := $DespairDetector
+
+var despair_coord := Vector2.ZERO
+
 
 var temp := AnimatedSprite2D.new()
 
@@ -23,9 +27,9 @@ func fire_hookshot():
 		print("Hookshot hit!")
 
 
-func _on_dispair_detector_body_entered(body: Node2D) -> void:
-	print("Player is now standing in Dispair")
+func _on_despair_detector_body_entered(body: Node2D) -> void:
+	print("Player is now standing in Despair at (%s)" % despair_detector.global_position)	
+	
 
-
-func _on_dispair_detector_body_exited(body: Node2D) -> void:
+func _on_despair_detector_body_exited(body: Node2D) -> void:
 	print("Player is no longer standing in Dispair")
