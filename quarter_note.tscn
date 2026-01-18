@@ -3,13 +3,11 @@
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="1_e5jew"]
 [ext_resource type="Script" uid="uid://sun2fbq1mjrm" path="res://quarter_note.gd" id="1_rkou8"]
 
-[sub_resource type="Animation" id="Animation_rkou8"]
-resource_name = "test"
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rkou8"]
+size = Vector2(152, 157)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_e5nu0"]
-_data = {
-&"test": SubResource("Animation_rkou8")
-}
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e5nu0"]
+size = Vector2(11, 241)
 
 [node name="QuarterNote" type="Node2D"]
 script = ExtResource("1_rkou8")
@@ -20,11 +18,16 @@ tile_set = ExtResource("1_e5jew")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.5
-autostart = true
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_e5nu0")
-}
+[node name="DespairDetector" type="Area2D" parent="."]
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DespairDetector"]
+position = Vector2(16, 64.5)
+shape = SubResource("RectangleShape2D_rkou8")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="DespairDetector"]
+position = Vector2(87, -134)
+shape = SubResource("RectangleShape2D_e5nu0")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

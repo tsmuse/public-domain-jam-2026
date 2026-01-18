@@ -50,7 +50,7 @@ target_position = Vector2(0, 150)
 collision_mask = 2
 
 [node name="DespairDetector" type="Area2D" parent="."]
-collision_mask = 4
+collision_mask = 12
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DespairDetector"]
 shape = SubResource("CapsuleShape2D_6lknf")

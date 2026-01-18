@@ -2,12 +2,16 @@ extends Node2D
 
 @onready var note := $Note
 @onready var timer := $Timer
+@onready var despair_detector := $DespairDetector
 
 @export var completion_progress := 0.0
+@export var tile_interval := 0.5
+
 
 var note_processing := true
 var note_to_render := 0
 var render_next := false
+var total_tiles := -1
 
 var tile_source_id = 0
 var ll_corner_atlas_coord := Vector2i(0,10)
@@ -145,17 +149,22 @@ func start_note() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	timer.wait_time = tile_interval
+	total_tiles = note_path.size()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	note_processing = not despair_detector.has_overlapping_bodies()
+	
 	if note_processing and render_next:
 		note.set_cell(note_path[note_to_render].tile, tile_source_id, note_path[note_to_render].sprite)
 		note_to_render += 1
 		render_next = false
+		completion_progress = note_to_render / total_tiles
 		if note_to_render == note_path.size():
 			note_processing = false
+			timer.stop()
 
 
 

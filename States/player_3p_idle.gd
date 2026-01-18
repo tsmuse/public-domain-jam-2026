@@ -1,4 +1,4 @@
-class_name Idle
+class_name Idle3p
 extends ControllerState
 
 @export_category("Related States")

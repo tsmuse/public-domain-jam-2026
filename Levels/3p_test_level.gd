@@ -17,15 +17,22 @@ extends Node2D
 @onready var despair := $TileLayers/Despair
 @onready var despair_timer := $DespairTimer
 
+@onready var measures := $Measures
+
 var composer_progress := 0.0
 var despair_count := 0
 var despair_source_id := 0
 var despair_atlas_coord := Vector2i(5,5)
 var despair_start_coord := Vector2i(-5,-5)
 var despair_next_line := Vector2i(166,72)
+var despair_rects_drawn := 0
 var despair_should_grow := false
 var clear_despair_around_player := false
 var despair_to_clear_w_player := Vector2i(0,0)
+var used_cells:Array[Vector2i]
+
+var current_measure := 0
+var measure_has_started := false
 
 var last_velocity := Vector2.ZERO
 
@@ -39,41 +46,35 @@ func _ready():
 	turn_label.text = "Turn Speed: %s" % controller.turn_speed
 	
 	jumph_label.text = "Composer Progress: %s" % composer_progress
-	
+	var bar := measures.get_children()[current_measure]
+	despair_start_coord = bar.despair_rect_start
+	despair_next_line = Vector2i(bar.despair_rect_start.x + bar.despair_rect_length, bar.despair_rect_start.y + bar.despair_rect_height)
 	
 
 func _process(delta):
 	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
 	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
+	used_cells = despair.get_used_cells()
 	
 	if despair_should_grow:
 		var far_x = despair_start_coord.x + despair_next_line.x
 		var far_y = despair_start_coord.y + despair_next_line.y
-		# draw a line from start_coord to (start_coord.x + next_line.x, start_coord.y)
-		for i in range(despair_next_line.x):
-			# todo: check all the tiles around and fill in blank tile instead
-			despair.set_cell(Vector2i(despair_start_coord.x + i, despair_start_coord.y), despair_source_id, despair_atlas_coord)
-			despair_count += 1
-		# draw a line from (start_coord.x + next_line.x, start_coord.y) to (start_coord.x + next_line.x, start_coord.y + next_line.y)
-		for i in range(despair_next_line.y):
-			# todo: check all the tiles around and fill in blank tile instead
-			despair.set_cell(Vector2i(far_x, despair_start_coord.y + i), despair_source_id, despair_atlas_coord)
-			despair_count += 1
-		# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to (start_coord.x, start_coord.y + next_line.y)
-		for i in range(despair_next_line.x):
-			# todo: check all the tiles around and fill in blank tile instead
-			despair.set_cell(Vector2i(far_x - i, far_y), despair_source_id, despair_atlas_coord)
-			despair_count += 1
-		# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
-		for i in range(despair_next_line.y):
-			# todo: check all the tiles around and fill in blank tile instead
-			despair.set_cell(Vector2i(despair_start_coord.x, far_y - i), despair_source_id, despair_atlas_coord)
-			despair_count += 1
+		# draw top rect line from start_coord to (far_x, start_coord.y)
+		_draw_despair_line(despair_start_coord, Vector2i(far_x, despair_start_coord.y))
+		# draw a right rect line from (far_x, start_coord.y) to (far_x, far_y)
+		_draw_despair_line(Vector2i(far_x, despair_start_coord.y), Vector2i(far_x,far_y))
+		# draw a bottom line from (far_x, far_y) to (start_coord.x, far_y)
+		_draw_despair_line(Vector2i(far_x,far_y), Vector2i(despair_start_coord.x, far_y))
+		# draw a left line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
+		_draw_despair_line(Vector2i(despair_start_coord.x,far_y), despair_start_coord)
 
 		despair_start_coord = despair_start_coord + Vector2i(1,1)
 		despair_next_line = despair_next_line - Vector2i(2,2)
+		despair_rects_drawn += 1
+		print("despair_rects_drawn: %s" % despair_rects_drawn)
 		despair_should_grow = false
 	
+	despair_count = despair.get_used_cells().size()
 	composer_progress += (17.0 - (despair_count * 0.01)) * delta
 	jumph_label.text = "Composer Progress: %s" % composer_progress
 	# enable these if you're actually changing them while the game it running
@@ -85,8 +86,8 @@ func _process(delta):
 	#jumph_label.text = "Jump Height: %s px" % controller.jump_height
 	#jumpd_label.text = "Jump Duration: %s sec" % controller.jump_duration
 	#downg_label.text = "Down Gravity: %s x G" % controller.down_gravity
-	#aa_label.text = "Air Accel: %s" % controller.max_air_accel
 	#ab_label.text = "Air Break: %s" % controller.air_brake
+	#aa_label.text = "Air Accel: %s" % controller.max_air_accel
 	#ac_label.text = "Air Control: %s" % controller.air_control
 	#vh_label.text = "Variable Height Jumps: %s" % controller.variable_height
 	#vhcut_label.text = "Variable Height Cutoff: %s" % controller.variable_height_cutoff
@@ -98,11 +99,18 @@ func _process(delta):
 	#tv_label.text = "Terminal Velocity: %s x G" % controller.terminal_velocity
 	
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if player.despair_detector.has_overlapping_bodies():
+		var overlap = player.despair_detector.get_overlapping_bodies()[0]
+		print("Overlapping: %s" % overlap)
 		despair_to_clear_w_player = despair.local_to_map(player.global_position)
 		_clear_around_player(despair_to_clear_w_player)
 	
+	if player.despair_detector.has_overlapping_areas():
+		var overlap = player.despair_detector.get_overlapping_areas()[0]
+		if overlap.get_collision_mask_value(4) and not measure_has_started:
+			print("Overlapping Start")
+			despair_timer.start()
 
 
 func _on_despair_timer_timeout() -> void:
@@ -115,4 +123,190 @@ func _clear_around_player(coord) -> void:
 	despair.erase_cell(Vector2i(coord.x + 1, coord.y))
 	despair.erase_cell(Vector2i(coord.x, coord.y - 1))
 	despair.erase_cell(Vector2i(coord.x, coord.y + 1))
+
+# draw top rect line from start_coord to (start_coord.x + next_line.x, start_coord.y)
+# draw a right rect line from (start_coord.x + next_line.x, start_coord.y) to (start_coord.x + next_line.x, start_coord.y + next_line.y)
+# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to (start_coord.x, start_coord.y + next_line.y)
+# draw a line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
+# dumb naming clarification: next_line is the length and height of the current rectangle to draw, no idea why I came up with this dumb ass name
+func _draw_despair_line(line_start:Vector2i, line_end:Vector2i) -> void:
+	#figure out how long a line to draw and in what direction
+	var tiles_to_draw = line_end - line_start # the value that is not 0 is which axis to draw on
+	var direction: int
+	var axis: String
+	var count: int
 	
+	if tiles_to_draw.x != 0:
+		direction = sign(line_end.x - line_start.x)
+		count = tiles_to_draw.x
+		axis = "x"
+	else:
+		direction = sign(line_end.y - line_start.y)
+		count = tiles_to_draw.y
+		axis = "y"
+	
+	var this_is_top = axis == "x" and direction == 1
+	var this_is_right = axis == "y" and direction == 1
+	var this_is_bottom = axis == "x" and direction == -1
+	var this_is_left = axis == "y" and direction == -1
+	
+	if this_is_left:
+		print("line_start: %s" % line_start)
+		print("line_end: %s" % line_end)
+	
+	for i in range(0, count, direction):
+		var tile_drawn := false
+		if despair_rects_drawn > 2:
+			# check all the tiles around and fill in blank tile instead
+			if this_is_top:
+				#this is the top line of the rectangle
+				#print("Checking top of rectangle to heal")
+				if i == 0:
+					#print("Checking top left corner")
+					# this is the top, left corner
+					for r in range(despair_rects_drawn, 0, -1):
+						#print("checking r: %s" % r)
+						# check prev tiles to the left, top, and the top left diagonal
+						if tile_drawn:
+							break
+							
+						var prev_left = Vector2i(line_start.x - r, line_start.y)
+						var prev_top_left = Vector2i(line_start.x - r, line_start.y - r)
+						var prev_top = Vector2i(line_start.x, line_start.y - r)
+						if used_cells.find(prev_left) == -1:
+							#print("top left corner prev_left missing: tile(%s)" % prev_left)
+							tile_drawn = true
+							despair.set_cell(prev_left, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_top_left) == -1:
+							#print("top left corner prev_top_left missing: tile(%s)" % prev_top_left)
+							tile_drawn = true
+							despair.set_cell(prev_top_left, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_top) == -1:
+							#print("top left corner prev_top missing: tile(%s)" % prev_top)
+							tile_drawn = true
+							despair.set_cell(prev_top, despair_source_id, despair_atlas_coord)
+					#print("after checking top left corner tile_drawn is %s" % tile_drawn)
+				elif line_start.x + i == line_end.x:
+					# this is the top right corner
+					#print("Checking top right corner")
+					for r in range(despair_rects_drawn, 0, -1):
+						# check prev tiles to the right, top, and the top right diagonal
+						if tile_drawn:
+							break
+						
+						var prev_right = Vector2i(line_end.x + r, line_end.y)
+						var prev_top_right = Vector2i(line_end.x + r, line_end.y - r)
+						var prev_top = Vector2i(line_end.x, line_end.y - r)
+						if used_cells.find(prev_right) == -1:
+							tile_drawn = true
+							despair.set_cell(prev_right, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_top_right) == -1:
+							tile_drawn = true
+							despair.set_cell(prev_top_right, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_top) == -1:
+							tile_drawn = true
+							despair.set_cell(prev_top, despair_source_id, despair_atlas_coord)
+					#print("after checking top right corner tile_drawn is %s" % tile_drawn)
+				else:
+					# this is just a tile along the top line
+					#print("Checking tile along top line")
+					for r in range(despair_rects_drawn, 0, -1):
+						# check prev tiles to the top
+						if tile_drawn:
+							break 
+							
+						var prev_top = Vector2i((line_start.x + i), line_start.y - r)
+						if used_cells.find(prev_top) == -1:
+							tile_drawn = true
+							despair.set_cell(prev_top, despair_source_id, despair_atlas_coord)
+					#print("after checking top tile tile_drawn is %s" % tile_drawn)
+			elif this_is_bottom:
+				#this is the bottom line of the rectangle
+				if line_start.x + i == line_end.x:
+					#print("checking bottom left corner")
+					# this is the bottom, left corner
+					for r in range(despair_rects_drawn, 0, -1):
+						# check prev tiles to the left, bottom, and the bottom left diagonal
+						if tile_drawn:
+							break
+							
+						var prev_left = Vector2i(line_start.x - r, line_start.y)
+						var prev_bottom_left = Vector2i(line_start.x - r, line_start.y + r)
+						var prev_bottom = Vector2i(line_start.x, line_start.y + r)
+						if used_cells.find(prev_left) == -1:
+							#print("bottom left prev_left healed")
+							tile_drawn = true
+							despair.set_cell(prev_left, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_bottom_left) == -1:
+							#print("bottom left prev_bottom_left healed")
+							tile_drawn = true
+							despair.set_cell(prev_bottom_left, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_bottom) == -1:
+							#print("bottom left prev_bottom healed")
+							tile_drawn = true
+							despair.set_cell(prev_bottom, despair_source_id, despair_atlas_coord)
+				elif i == 0:
+					# this is the bottom right corner
+					#print("checking bottom right corner")
+					for r in range(despair_rects_drawn, 0, -1):
+						# check prev tiles to the right, bottom, and the bottom right diagonal
+						
+						if tile_drawn:
+							break
+							
+						#print("checking r: %s" % r)
+						var prev_right = Vector2i(line_start.x + r, line_start.y)
+						var prev_bottom_right = Vector2i(line_start.x + r, line_start.y + r)
+						var prev_bottom = Vector2i(line_start.x, line_start.y + r)
+						if used_cells.find(prev_right) == -1:
+							#print("bottom right prev_right healed tile at (%s)" % prev_right)
+							tile_drawn = true
+							despair.set_cell(prev_right, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_bottom_right) == -1:
+							#print("bottom right prev_bottom_right healed")
+							tile_drawn = true
+							despair.set_cell(prev_bottom_right, despair_source_id, despair_atlas_coord)
+						if used_cells.find(prev_bottom) == -1:
+							#print("bottom right prev_bottom healed")
+							tile_drawn = true
+							despair.set_cell(prev_bottom, despair_source_id, despair_atlas_coord)
+				else:
+					# this is just a tile along the bottom line
+					for r in range(despair_rects_drawn, 0, -1):
+						# check prev tiles to the bottom
+						if tile_drawn:
+							break 
+							
+						var prev_bottom = Vector2i((line_start.x + i), line_start.y + r)
+						if used_cells.find(prev_bottom) == -1:
+							tile_drawn = true
+							despair.set_cell(prev_bottom, despair_source_id, despair_atlas_coord)
+			elif this_is_right:
+				# this is just a tile along the right side
+				for r in range(despair_rects_drawn, 0, -1):
+					# check prev tiles to the right
+					if tile_drawn:
+						break 
+						
+					var prev_right = Vector2i(line_end.x + r, line_start.y + i)
+					if used_cells.find(prev_right) == -1:
+						tile_drawn = true
+						despair.set_cell(prev_right, despair_source_id, despair_atlas_coord)
+			else:
+				# this is just a tile along the left side
+				print("checking left side for healing")
+				for r in range(despair_rects_drawn, 0, -1):
+					# check prev tiles to the right
+					if tile_drawn:
+						break 
+					print("r is %s" % r)
+					var prev_left = Vector2i(line_start.x - r, line_start.y + i)
+					if used_cells.find(prev_left) == -1:
+						print("Healing prev_left tile at %s" % prev_left)
+						tile_drawn = true
+						despair.set_cell(prev_left, despair_source_id, despair_atlas_coord)
+		if not tile_drawn:
+			if axis == "x":
+				despair.set_cell(Vector2i(line_start.x + i, line_start.y), despair_source_id, despair_atlas_coord)
+			else:
+				despair.set_cell(Vector2i(line_start.x, line_start.y + i), despair_source_id, despair_atlas_coord)

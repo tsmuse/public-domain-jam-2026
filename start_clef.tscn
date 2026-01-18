@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://cqvgpa5hmcxvb"]
+
+[ext_resource type="Texture2D" uid="uid://b6a0duqgp3uor" path="res://Sprites/tilemap-characters.png" id="1_pubwx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2nh8e"]
+size = Vector2(59, 57)
+
+[node name="StartClef" type="Node2D"]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(19.5, 18.5)
+shape = SubResource("RectangleShape2D_2nh8e")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(18.5, 18.5)
+scale = Vector2(2.5416667, 2.5416667)
+texture = ExtResource("1_pubwx")
+region_enabled = true
+region_rect = Rect2(200, 0, 24, 24)
