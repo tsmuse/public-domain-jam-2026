@@ -11,7 +11,7 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6lknf"]
 
 [node name="Player" type="CharacterBody2D"]
-collision_mask = 2
+collision_mask = 0
 script = ExtResource("1_4obhj")
 
 [node name="PlayerController" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
@@ -55,6 +55,3 @@ collision_mask = 12
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DespairDetector"]
 shape = SubResource("CapsuleShape2D_6lknf")
 debug_color = Color(0.9372297, 1.540184e-05, 0.6309754, 0.41960785)
-
-[connection signal="body_entered" from="DespairDetector" to="." method="_on_despair_detector_body_entered"]
-[connection signal="body_exited" from="DespairDetector" to="." method="_on_despair_detector_body_exited"]

@@ -23,8 +23,8 @@ var composer_progress := 0.0
 var despair_count := 0
 var despair_source_id := 0
 var despair_atlas_coord := Vector2i(5,5)
-var despair_start_coord := Vector2i(-5,-5)
-var despair_next_line := Vector2i(166,72)
+var despair_start_coord :Vector2i
+var despair_next_line :Vector2i
 var despair_rects_drawn := 0
 var despair_should_grow := false
 var clear_despair_around_player := false
@@ -33,6 +33,9 @@ var used_cells:Array[Vector2i]
 
 var current_measure := 0
 var measure_has_started := false
+var bar: Node
+var current_measure_complete := false
+var level_complete := false
 
 var last_velocity := Vector2.ZERO
 
@@ -46,12 +49,35 @@ func _ready():
 	turn_label.text = "Turn Speed: %s" % controller.turn_speed
 	
 	jumph_label.text = "Composer Progress: %s" % composer_progress
-	var bar := measures.get_children()[current_measure]
-	despair_start_coord = bar.despair_rect_start
-	despair_next_line = Vector2i(bar.despair_rect_start.x + bar.despair_rect_length, bar.despair_rect_start.y + bar.despair_rect_height)
+	_set_current_bar()
+	
 	
 
 func _process(delta):
+	if level_complete:
+		print("GAME OVER!")
+		current_measure_complete = false
+		despair_should_grow = false
+		despair_timer.stop()
+		
+	if current_measure_complete:
+		print("current_measure before update: %s" % current_measure)
+		current_measure += 1
+		if current_measure == measures.get_children().size():
+			level_complete = true
+		else:
+			current_measure_complete = false
+			_set_current_bar()
+			_start_notes_in_current_bar()
+	
+	if not current_measure_complete:
+		current_measure_complete = true
+		for i in range(bar.get_children().size()):
+			var current_note = bar.get_children()[i]
+			if current_note.note_processing or current_note.completion_progress < 1.0:
+				current_measure_complete = false
+				break
+	#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
 	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
 	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
 	used_cells = despair.get_used_cells()
@@ -71,7 +97,7 @@ func _process(delta):
 		despair_start_coord = despair_start_coord + Vector2i(1,1)
 		despair_next_line = despair_next_line - Vector2i(2,2)
 		despair_rects_drawn += 1
-		print("despair_rects_drawn: %s" % despair_rects_drawn)
+		#print("despair_rects_drawn: %s" % despair_rects_drawn)
 		despair_should_grow = false
 	
 	despair_count = despair.get_used_cells().size()
@@ -102,22 +128,36 @@ func _process(delta):
 func _physics_process(_delta: float) -> void:
 	if player.despair_detector.has_overlapping_bodies():
 		var overlap = player.despair_detector.get_overlapping_bodies()[0]
-		print("Overlapping: %s" % overlap)
+		#print("Overlapping: %s" % overlap)
 		despair_to_clear_w_player = despair.local_to_map(player.global_position)
 		_clear_around_player(despair_to_clear_w_player)
 	
 	if player.despair_detector.has_overlapping_areas():
 		var overlap = player.despair_detector.get_overlapping_areas()[0]
-		if overlap.get_collision_mask_value(4) and not measure_has_started:
-			print("Overlapping Start")
-			despair_timer.start()
+		#print("player overlapping some area: %s" % overlap)
+		#print("is area start? %s" % overlap.get_collision_layer_value(4))
+		if overlap.get_collision_layer_value(4) and not measure_has_started:
+			#print("Overlapping Start")
+			_start_notes_in_current_bar()
 
+func _start_notes_in_current_bar() -> void:
+	measure_has_started = true
+	despair_timer.start()
+	for i in range(bar.get_children().size()):
+		bar.get_children()[i].start_note()
+
+func _set_current_bar() -> void:
+	despair.clear()
+	bar = measures.get_children()[current_measure]
+	despair_start_coord = bar.despair_rect_start
+	despair_next_line = Vector2i(bar.despair_rect_start.x + bar.despair_rect_length, bar.despair_rect_start.y + bar.despair_rect_height)
+	despair_rects_drawn = 0
 
 func _on_despair_timer_timeout() -> void:
 	despair_should_grow = true
 
 func _clear_around_player(coord) -> void:
-	print("Clearing despair around player standing at (%s)" % coord)
+	#print("Clearing despair around player standing at (%s)" % coord)
 	despair.erase_cell(coord)
 	despair.erase_cell(Vector2i(coord.x -1, coord.y))
 	despair.erase_cell(Vector2i(coord.x + 1, coord.y))
@@ -150,9 +190,9 @@ func _draw_despair_line(line_start:Vector2i, line_end:Vector2i) -> void:
 	var this_is_bottom = axis == "x" and direction == -1
 	var this_is_left = axis == "y" and direction == -1
 	
-	if this_is_left:
-		print("line_start: %s" % line_start)
-		print("line_end: %s" % line_end)
+	#if this_is_left:
+		#print("line_start: %s" % line_start)
+		#print("line_end: %s" % line_end)
 	
 	for i in range(0, count, direction):
 		var tile_drawn := false
@@ -294,15 +334,15 @@ func _draw_despair_line(line_start:Vector2i, line_end:Vector2i) -> void:
 						despair.set_cell(prev_right, despair_source_id, despair_atlas_coord)
 			else:
 				# this is just a tile along the left side
-				print("checking left side for healing")
+				#print("checking left side for healing")
 				for r in range(despair_rects_drawn, 0, -1):
 					# check prev tiles to the right
 					if tile_drawn:
 						break 
-					print("r is %s" % r)
+					#print("r is %s" % r)
 					var prev_left = Vector2i(line_start.x - r, line_start.y + i)
 					if used_cells.find(prev_left) == -1:
-						print("Healing prev_left tile at %s" % prev_left)
+						#print("Healing prev_left tile at %s" % prev_left)
 						tile_drawn = true
 						despair.set_cell(prev_left, despair_source_id, despair_atlas_coord)
 		if not tile_drawn:

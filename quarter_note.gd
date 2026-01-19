@@ -154,14 +154,18 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	note_processing = not despair_detector.has_overlapping_bodies()
-	
+	if despair_detector.has_overlapping_bodies():
+		print("Despair is overlapping a note!")
 	if note_processing and render_next:
 		note.set_cell(note_path[note_to_render].tile, tile_source_id, note_path[note_to_render].sprite)
 		note_to_render += 1
 		render_next = false
-		completion_progress = note_to_render / total_tiles
+		completion_progress = float(note_to_render) / total_tiles
+		#print("note_to_render: %s" % note_to_render)
+		#print("total_tiles: %s" % total_tiles)
+		#print("completion_progress: %s" % completion_progress)
 		if note_to_render == note_path.size():
 			note_processing = false
 			timer.stop()
@@ -171,3 +175,7 @@ func _process(delta: float) -> void:
 func _on_timer_timeout() -> void:
 	if note_to_render < note_path.size():
 		render_next = true
+
+
+func _on_despair_detector_body_entered(body: Node2D) -> void:
+	print("Signal!! Body entered despair_detector")

@@ -80,8 +80,9 @@ player_action={
 
 2d_physics/layer_1="Player"
 2d_physics/layer_2="Walls"
-2d_physics/layer_3="Dismay"
+2d_physics/layer_3="Despair"
 2d_physics/layer_4="Start"
+2d_physics/layer_5="Notes"
 
 [physics]
 

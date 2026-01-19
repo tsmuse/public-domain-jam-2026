@@ -4,10 +4,10 @@
 [ext_resource type="Script" uid="uid://sun2fbq1mjrm" path="res://quarter_note.gd" id="1_rkou8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rkou8"]
-size = Vector2(152, 157)
+size = Vector2(165, 162)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e5nu0"]
-size = Vector2(11, 241)
+size = Vector2(15.5, 240.5)
 
 [node name="QuarterNote" type="Node2D"]
 script = ExtResource("1_rkou8")
@@ -20,14 +20,16 @@ tile_set = ExtResource("1_e5jew")
 wait_time = 0.5
 
 [node name="DespairDetector" type="Area2D" parent="."]
+collision_layer = 16
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DespairDetector"]
-position = Vector2(16, 64.5)
+position = Vector2(14.5, 67)
 shape = SubResource("RectangleShape2D_rkou8")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="DespairDetector"]
-position = Vector2(87, -134)
+position = Vector2(84.75, -134.25)
 shape = SubResource("RectangleShape2D_e5nu0")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="DespairDetector" to="." method="_on_despair_detector_body_entered"]
