@@ -15,6 +15,8 @@ func exit() -> void:
 
 ## Called by the parent's _unhandled_input lifecycle function. Any logic dealing with player input goes here. 
 func process_input(_evt: InputEvent) -> State:
+	if controller.wants_to_jump():
+		parent.drop_bomba()
 	return null
 
 ## Called by the parent's _process lifecycle function. Any non-physics related logic goes here. 

@@ -5,7 +5,10 @@ extends CharacterBody2D
 @onready var sprite := $Sprite2D
 @onready var dispair_detector := $DispairDetector
 
+
+
 var temp := AnimatedSprite2D.new()
+var bomba_scn = preload("res://bomba.tscn")
 
 func _ready():
 	controller.init(self, temp)

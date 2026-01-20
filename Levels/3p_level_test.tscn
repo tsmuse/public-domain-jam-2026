@@ -30,19 +30,15 @@ despair_rect_height = 64
 
 [node name="QuarterNote" parent="Measures/Measure01" instance=ExtResource("3_tu600")]
 position = Vector2(531, 547)
-tile_interval = 0.25
 
 [node name="QuarterNote2" parent="Measures/Measure01" instance=ExtResource("3_tu600")]
 position = Vector2(913, 386)
-tile_interval = 0.25
 
 [node name="QuarterNote3" parent="Measures/Measure01" instance=ExtResource("3_tu600")]
 position = Vector2(1254, 490)
-tile_interval = 0.25
 
 [node name="QuarterNote4" parent="Measures/Measure01" instance=ExtResource("3_tu600")]
 position = Vector2(1646, 852)
-tile_interval = 0.25
 
 [node name="Measure02" type="Node2D" parent="Measures"]
 script = ExtResource("3_ba6of")
@@ -182,6 +178,5 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="DespairTimer" type="Timer" parent="."]
-wait_time = 3.0
 
 [connection signal="timeout" from="DespairTimer" to="." method="_on_despair_timer_timeout"]

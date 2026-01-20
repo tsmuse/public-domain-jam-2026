@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://b820hkgxih3if"]
+
+[ext_resource type="Script" uid="uid://f5o8o6t3ulwb" path="res://bomba.gd" id="1_jlaks"]
+[ext_resource type="Texture2D" uid="uid://b6a0duqgp3uor" path="res://Sprites/tilemap-characters.png" id="2_ncxna"]
+
+[node name="Bomba" type="Node2D"]
+script = ExtResource("1_jlaks")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ncxna")
+region_enabled = true
+region_rect = Rect2(78, 28, 18, 18)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

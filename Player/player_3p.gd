@@ -5,6 +5,8 @@ extends CharacterBody2D
 @onready var sprite := $Sprite2D
 @onready var despair_detector := $DespairDetector
 
+signal player_dropped_bomba
+
 var despair_coord := Vector2.ZERO
 
 
@@ -25,3 +27,6 @@ func _process(delta):
 func fire_hookshot():
 	if(hookshot.is_colliding()):
 		print("Hookshot hit!")
+
+func drop_bomba():
+	player_dropped_bomba.emit(self.global_position)

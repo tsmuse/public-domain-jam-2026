@@ -16,6 +16,8 @@ func exit() -> void:
 
 ## Called by the parent's _unhandled_input lifecycle function. Any logic dealing with player input goes here. 
 func process_input(_evt: InputEvent) -> State:
+	if controller.wants_to_jump():
+		parent.drop_bomba()
 	if controller.get_movement_direction() != Vector2.ZERO:
 		return run_state
 	return null

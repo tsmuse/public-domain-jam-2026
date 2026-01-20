@@ -37,9 +37,12 @@ var bar: Node
 var current_measure_complete := false
 var level_complete := false
 
+var bomba_scn = preload("res://bomba.tscn")
+
 var last_velocity := Vector2.ZERO
 
 func _ready():
+	player.player_dropped_bomba.connect(_on_player_dropped_bomba)
 	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
 	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
 	
@@ -139,6 +142,25 @@ func _physics_process(_delta: float) -> void:
 		if overlap.get_collision_layer_value(4) and not measure_has_started:
 			#print("Overlapping Start")
 			_start_notes_in_current_bar()
+
+func _on_player_dropped_bomba(pos:Vector2) -> void:
+	var real_bomba = bomba_scn.instantiate()
+	real_bomba.global_position = pos
+	real_bomba.bomba_boom.connect(_on_bomba_boom)
+	self.add_child(real_bomba)
+
+func _on_bomba_boom(bomba:Node2D) -> void:
+	print("Bomba goes boom!")
+	var bomba_tile_pos = despair.local_to_map(bomba.global_position)
+	for x in range(-5,6,1):
+		for y in range(-5,6,1):
+			despair.erase_cell(Vector2i(bomba_tile_pos.x + x, bomba_tile_pos.y + y))
+	#for i in range(4):
+		#despair.erase_cell(bomba_tile_pos + Vector2i(i,i))
+		#despair.erase_cell(bomba_tile_pos + Vector2i(-i,i))
+		#despair.erase_cell(bomba_tile_pos + Vector2i(i,-i))
+		#despair.erase_cell(bomba_tile_pos + Vector2i(-i,-i))
+	bomba.queue_free()
 
 func _start_notes_in_current_bar() -> void:
 	measure_has_started = true
