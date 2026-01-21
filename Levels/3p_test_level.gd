@@ -18,6 +18,7 @@ extends Node2D
 @onready var despair_timer := $DespairTimer
 
 @onready var measures := $Measures
+@onready var test_area := $Area2D
 
 var composer_progress := 0.0
 var despair_count := 0
@@ -40,6 +41,10 @@ var level_complete := false
 var bomba_scn = preload("res://bomba.tscn")
 
 var last_velocity := Vector2.ZERO
+var static_monitoring := true
+
+func _on_area_2d_body_entered(body:Node2D) -> void:
+	print("%s is overlapping the test area!!!" % body.name)
 
 func _ready():
 	player.player_dropped_bomba.connect(_on_player_dropped_bomba)
@@ -57,6 +62,13 @@ func _ready():
 	
 
 func _process(delta):
+	
+	if not static_monitoring:
+		test_area.monitoring = true
+		static_monitoring = true
+	if not test_area.monitoring:
+		print("Test area is not monitoring!")
+	
 	if level_complete:
 		print("GAME OVER!")
 		current_measure_complete = false
@@ -102,6 +114,8 @@ func _process(delta):
 		despair_rects_drawn += 1
 		#print("despair_rects_drawn: %s" % despair_rects_drawn)
 		despair_should_grow = false
+		test_area.monitoring = false
+		static_monitoring = false
 	
 	despair_count = despair.get_used_cells().size()
 	composer_progress += (17.0 - (despair_count * 0.01)) * delta

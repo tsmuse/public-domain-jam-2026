@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=4 uid="uid://bix4dq8hg67d8"]
+[gd_scene load_steps=12 format=4 uid="uid://bix4dq8hg67d8"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_f1ifd"]
 [ext_resource type="PackedScene" uid="uid://c30tdpt42w1cv" path="res://Player/player_3p.tscn" id="2_f1ifd"]
@@ -12,6 +12,9 @@
 
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("8_c5wod")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ba6of"]
+size = Vector2(220, 124)
 
 [node name="TestLevel" type="Node2D"]
 script = ExtResource("1_f1ifd")
@@ -179,4 +182,13 @@ layout_mode = 2
 
 [node name="DespairTimer" type="Timer" parent="."]
 
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(324, 95)
+shape = SubResource("RectangleShape2D_ba6of")
+
 [connection signal="timeout" from="DespairTimer" to="." method="_on_despair_timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
