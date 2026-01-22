@@ -1,20 +1,17 @@
-[gd_scene load_steps=12 format=4 uid="uid://bix4dq8hg67d8"]
+[gd_scene load_steps=11 format=4 uid="uid://bix4dq8hg67d8"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_f1ifd"]
 [ext_resource type="PackedScene" uid="uid://c30tdpt42w1cv" path="res://Player/player_3p.tscn" id="2_f1ifd"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_tu600"]
 [ext_resource type="Script" uid="uid://cfwectu1w60r4" path="res://Levels/measure.gd" id="3_ba6of"]
-[ext_resource type="PackedScene" uid="uid://bme0iv3pa6ici" path="res://quarter_note.tscn" id="3_tu600"]
+[ext_resource type="PackedScene" uid="uid://bme0iv3pa6ici" path="res://Notes/quarter_note.tscn" id="3_tu600"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="4_xe17u"]
-[ext_resource type="PackedScene" uid="uid://cqvgpa5hmcxvb" path="res://start_clef.tscn" id="5_tycq6"]
+[ext_resource type="PackedScene" uid="uid://cqvgpa5hmcxvb" path="res://Notes/start_clef.tscn" id="5_tycq6"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="7_84m5h"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="8_c5wod"]
 
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("8_c5wod")
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ba6of"]
-size = Vector2(220, 124)
 
 [node name="TestLevel" type="Node2D"]
 script = ExtResource("1_f1ifd")
@@ -181,14 +178,6 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="DespairTimer" type="Timer" parent="."]
-
-[node name="Area2D" type="Area2D" parent="."]
-collision_layer = 16
-collision_mask = 5
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2(324, 95)
-shape = SubResource("RectangleShape2D_ba6of")
+wait_time = 2.5
 
 [connection signal="timeout" from="DespairTimer" to="." method="_on_despair_timer_timeout"]
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

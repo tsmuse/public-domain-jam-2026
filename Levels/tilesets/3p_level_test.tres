@@ -1,6 +1,7 @@
-[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://qomxqclj785q"]
+[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://qomxqclj785q"]
 
 [ext_resource type="Texture2D" uid="uid://dcdwq5j22ip1u" path="res://Sprites/tilemap.png" id="1_dq5w4"]
+[ext_resource type="Texture2D" uid="uid://boet0gqo81tq4" path="res://Sprites/sheet_music_basic.png" id="2_rcwr8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcwr8"]
 texture = ExtResource("1_dq5w4")
@@ -117,9 +118,16 @@ separation = Vector2i(1, 1)
 9:7/0 = 0
 11:7/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8otgw"]
+texture = ExtResource("2_rcwr8")
+separation = Vector2i(1, 1)
+0:0/0 = 0
+1:0/0 = 0
+
 [resource]
 physics_layer_0/collision_layer = 2
 physics_layer_0/collision_mask = 0
 physics_layer_1/collision_layer = 4
 physics_layer_1/collision_mask = 17
 sources/0 = SubResource("TileSetAtlasSource_rcwr8")
+sources/1 = SubResource("TileSetAtlasSource_8otgw")

@@ -9,6 +9,7 @@ extends Node2D
 
 
 var note_processing := true
+var note_paused := false
 var note_to_render := 0
 var render_next := false
 var total_tiles := -1
@@ -141,11 +142,21 @@ var note_path = [
 	{"tile": Vector2i(5,-14), "sprite": stem_atlas_coord},
 	{"tile": Vector2i(5,-15), "sprite": stem_atlas_coord},
 	{"tile": Vector2i(5,-16), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-17), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-18), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-19), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-20), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-21), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-22), "sprite": stem_atlas_coord},
+	{"tile": Vector2i(5,-23), "sprite": stem_atlas_coord},
 ]
 
 func start_note() -> void:
 	note_processing = true
 	timer.start()
+
+func toggle_detector() -> void:
+	despair_detector.monitoring = not despair_detector.monitoring
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -155,27 +166,30 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta: float) -> void:
-	note_processing = not despair_detector.has_overlapping_bodies()
-	if despair_detector.has_overlapping_bodies():
-		print("Despair is overlapping a note!")
-	if note_processing and render_next:
-		note.set_cell(note_path[note_to_render].tile, tile_source_id, note_path[note_to_render].sprite)
-		note_to_render += 1
-		render_next = false
-		completion_progress = float(note_to_render) / total_tiles
-		#print("note_to_render: %s" % note_to_render)
-		#print("total_tiles: %s" % total_tiles)
-		#print("completion_progress: %s" % completion_progress)
-		if note_to_render == note_path.size():
+	if despair_detector.monitoring:
+		note_processing = not despair_detector.has_overlapping_bodies()
+		if despair_detector.has_overlapping_bodies() and not note_paused:
+			print("Despair is overlapping a note!")
 			note_processing = false
-			timer.stop()
+			note_paused = true
+		elif not despair_detector.has_overlapping_bodies() and note_paused:
+			note_paused = false
+			note_processing = true
+		
+		if note_processing and render_next:
+			note.set_cell(note_path[note_to_render].tile, tile_source_id, note_path[note_to_render].sprite)
+			note_to_render += 1
+			render_next = false
+			completion_progress = float(note_to_render) / total_tiles
+			#print("note_to_render: %s" % note_to_render)
+			#print("total_tiles: %s" % total_tiles)
+			#print("completion_progress: %s" % completion_progress)
+			if note_to_render == note_path.size():
+				note_processing = false
+				timer.stop()
 
 
 
 func _on_timer_timeout() -> void:
 	if note_to_render < note_path.size():
 		render_next = true
-
-
-func _on_despair_detector_body_entered(body: Node2D) -> void:
-	print("Signal!! Body entered despair_detector")

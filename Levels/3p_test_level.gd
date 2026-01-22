@@ -18,14 +18,13 @@ extends Node2D
 @onready var despair_timer := $DespairTimer
 
 @onready var measures := $Measures
-@onready var test_area := $Area2D
 
 var composer_progress := 0.0
 var despair_count := 0
 var despair_source_id := 0
 var despair_atlas_coord := Vector2i(5,5)
 var despair_start_coord :Vector2i
-var despair_next_line :Vector2i
+var despair_rect_size :Vector2i
 var despair_rects_drawn := 0
 var despair_should_grow := false
 var clear_despair_around_player := false
@@ -38,7 +37,7 @@ var bar: Node
 var current_measure_complete := false
 var level_complete := false
 
-var bomba_scn = preload("res://bomba.tscn")
+var bomba_scn = preload("res://Tools/bomba.tscn")
 
 var last_velocity := Vector2.ZERO
 var static_monitoring := true
@@ -58,16 +57,15 @@ func _ready():
 	
 	jumph_label.text = "Composer Progress: %s" % composer_progress
 	_set_current_bar()
+	print("despair_start: %s, despair_rect_size: %s" % [despair_start_coord, despair_rect_size])
 	
 	
 
 func _process(delta):
 	
 	if not static_monitoring:
-		test_area.monitoring = true
+		_toggle_notes_detectors()
 		static_monitoring = true
-	if not test_area.monitoring:
-		print("Test area is not monitoring!")
 	
 	if level_complete:
 		print("GAME OVER!")
@@ -98,8 +96,8 @@ func _process(delta):
 	used_cells = despair.get_used_cells()
 	
 	if despair_should_grow:
-		var far_x = despair_start_coord.x + despair_next_line.x
-		var far_y = despair_start_coord.y + despair_next_line.y
+		var far_x = despair_start_coord.x + despair_rect_size.x
+		var far_y = despair_start_coord.y + despair_rect_size.y
 		# draw top rect line from start_coord to (far_x, start_coord.y)
 		_draw_despair_line(despair_start_coord, Vector2i(far_x, despair_start_coord.y))
 		# draw a right rect line from (far_x, start_coord.y) to (far_x, far_y)
@@ -110,11 +108,11 @@ func _process(delta):
 		_draw_despair_line(Vector2i(despair_start_coord.x,far_y), despair_start_coord)
 
 		despair_start_coord = despair_start_coord + Vector2i(1,1)
-		despair_next_line = despair_next_line - Vector2i(2,2)
+		despair_rect_size = despair_rect_size - Vector2i(2,2)
 		despair_rects_drawn += 1
 		#print("despair_rects_drawn: %s" % despair_rects_drawn)
 		despair_should_grow = false
-		test_area.monitoring = false
+		_toggle_notes_detectors()
 		static_monitoring = false
 	
 	despair_count = despair.get_used_cells().size()
@@ -176,6 +174,11 @@ func _on_bomba_boom(bomba:Node2D) -> void:
 		#despair.erase_cell(bomba_tile_pos + Vector2i(-i,-i))
 	bomba.queue_free()
 
+func _toggle_notes_detectors() -> void:
+	var notes = bar.get_children()
+	for i in range(notes.size()):
+		notes[i].toggle_detector()
+
 func _start_notes_in_current_bar() -> void:
 	measure_has_started = true
 	despair_timer.start()
@@ -186,7 +189,7 @@ func _set_current_bar() -> void:
 	despair.clear()
 	bar = measures.get_children()[current_measure]
 	despair_start_coord = bar.despair_rect_start
-	despair_next_line = Vector2i(bar.despair_rect_start.x + bar.despair_rect_length, bar.despair_rect_start.y + bar.despair_rect_height)
+	despair_rect_size = Vector2i(bar.despair_rect_length, bar.despair_rect_height)
 	despair_rects_drawn = 0
 
 func _on_despair_timer_timeout() -> void:
@@ -226,9 +229,9 @@ func _draw_despair_line(line_start:Vector2i, line_end:Vector2i) -> void:
 	var this_is_bottom = axis == "x" and direction == -1
 	var this_is_left = axis == "y" and direction == -1
 	
-	#if this_is_left:
-		#print("line_start: %s" % line_start)
-		#print("line_end: %s" % line_end)
+	if this_is_bottom:
+		print("line_start: %s" % line_start)
+		print("line_end: %s" % line_end)
 	
 	for i in range(0, count, direction):
 		var tile_drawn := false

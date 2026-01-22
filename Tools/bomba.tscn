@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://b820hkgxih3if"]
 
-[ext_resource type="Script" uid="uid://f5o8o6t3ulwb" path="res://bomba.gd" id="1_jlaks"]
+[ext_resource type="Script" uid="uid://f5o8o6t3ulwb" path="res://Tools/bomba.gd" id="1_jlaks"]
 [ext_resource type="Texture2D" uid="uid://b6a0duqgp3uor" path="res://Sprites/tilemap-characters.png" id="2_ncxna"]
 
 [node name="Bomba" type="Node2D"]
