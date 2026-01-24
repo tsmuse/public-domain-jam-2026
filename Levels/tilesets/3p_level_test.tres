@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" load_steps=5 format=3 uid="uid://qomxqclj785q"]
 
 [ext_resource type="Texture2D" uid="uid://dcdwq5j22ip1u" path="res://Sprites/tilemap.png" id="1_dq5w4"]
-[ext_resource type="Texture2D" uid="uid://boet0gqo81tq4" path="res://Sprites/sheet_music_basic.png" id="2_rcwr8"]
+[ext_resource type="Texture2D" uid="uid://b4m2yic6v5pb0" path="res://Sprites/sheet_music_basic.png" id="2_rcwr8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rcwr8"]
 texture = ExtResource("1_dq5w4")
@@ -123,6 +123,11 @@ texture = ExtResource("2_rcwr8")
 separation = Vector2i(1, 1)
 0:0/0 = 0
 1:0/0 = 0
+2:0/0 = 0
+2:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
 
 [resource]
 physics_layer_0/collision_layer = 2

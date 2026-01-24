@@ -21,8 +21,8 @@ extends Node2D
 
 var composer_progress := 0.0
 var despair_count := 0
-var despair_source_id := 0
-var despair_atlas_coord := Vector2i(5,5)
+var despair_source_id := 1
+var despair_atlas_coord := Vector2i(5,0)
 var despair_start_coord :Vector2i
 var despair_rect_size :Vector2i
 var despair_rects_drawn := 0
@@ -181,7 +181,7 @@ func _toggle_notes_detectors() -> void:
 
 func _start_notes_in_current_bar() -> void:
 	measure_has_started = true
-	despair_timer.start()
+	# despair_timer.start()
 	for i in range(bar.get_children().size()):
 		bar.get_children()[i].start_note()
 

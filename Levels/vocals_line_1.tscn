@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=4 uid="uid://bweupordhxwg4"]
+[gd_scene load_steps=12 format=4 uid="uid://bweupordhxwg4"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_s187b"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_e4abr"]
 [ext_resource type="Script" uid="uid://cfwectu1w60r4" path="res://Levels/measure.gd" id="3_q8ewy"]
 [ext_resource type="PackedScene" uid="uid://bme0iv3pa6ici" path="res://Notes/quarter_note.tscn" id="4_lkhsx"]
 [ext_resource type="PackedScene" uid="uid://cqvgpa5hmcxvb" path="res://Notes/start_clef.tscn" id="5_aq24a"]
+[ext_resource type="PackedScene" uid="uid://bdikfmdlvxiju" path="res://Notes/eigth_note_single.tscn" id="5_e4abr"]
 [ext_resource type="PackedScene" uid="uid://c30tdpt42w1cv" path="res://Player/player_3p.tscn" id="6_ejl65"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="7_sx0cy"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="8_ydn87"]
@@ -34,14 +35,14 @@ position = Vector2(1299, 271)
 [node name="QuarterNote2" parent="Measures/Measure01" instance=ExtResource("4_lkhsx")]
 position = Vector2(1916, 263)
 
-[node name="QuarterNote3" parent="Measures/Measure01" instance=ExtResource("4_lkhsx")]
-position = Vector2(2286, 362)
+[node name="EigthNoteSingle" parent="Measures/Measure01" instance=ExtResource("5_e4abr")]
+position = Vector2(2286, 361)
 
-[node name="QuarterNote4" parent="Measures/Measure01" instance=ExtResource("4_lkhsx")]
-position = Vector2(2652, 269)
+[node name="EigthNoteSingle2" parent="Measures/Measure01" instance=ExtResource("5_e4abr")]
+position = Vector2(2693, 270)
 
 [node name="QuarterNote5" parent="Measures/Measure01" instance=ExtResource("4_lkhsx")]
-position = Vector2(3020, 342)
+position = Vector2(3160, 358)
 
 [node name="Measure02" type="Node2D" parent="Measures"]
 script = ExtResource("3_q8ewy")
