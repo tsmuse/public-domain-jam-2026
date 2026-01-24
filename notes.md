@@ -1,9 +1,9 @@
 # Notes to make for vocal line
 
 ~1. Quarter Note~
-2. Stem-down Quarter Note
+~2. Stem-down Quarter Note~
 ~3. Single Eigth Note~
-4. Stem-down Single Eigth Note
+~4. Stem-down Single Eigth Note~
 5. Half-note
 6. Stem-down Half Note
 7. Whole note
@@ -19,3 +19,8 @@
 
 # TBD Features
 1. Repeat bars
+
+
+# Spacing (all measured from edge of stem/notehead)
+Quarter notes - 29 tiles after
+Eigth notes - 

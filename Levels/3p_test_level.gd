@@ -74,6 +74,7 @@ func _process(delta):
 		despair_timer.stop()
 		
 	if current_measure_complete:
+		print("measure complete")
 		print("current_measure before update: %s" % current_measure)
 		current_measure += 1
 		if current_measure == measures.get_children().size():
@@ -84,10 +85,11 @@ func _process(delta):
 			_start_notes_in_current_bar()
 	
 	if not current_measure_complete:
+		# print("measure not complete")
 		current_measure_complete = true
 		for i in range(bar.get_children().size()):
-			var current_note = bar.get_children()[i]
-			if current_note.note_processing or current_note.completion_progress < 1.0:
+			var current_note:Note = bar.get_children()[i]
+			if not current_note.note_complete:
 				current_measure_complete = false
 				break
 	#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
@@ -181,7 +183,7 @@ func _toggle_notes_detectors() -> void:
 
 func _start_notes_in_current_bar() -> void:
 	measure_has_started = true
-	# despair_timer.start()
+	despair_timer.start()
 	for i in range(bar.get_children().size()):
 		bar.get_children()[i].start_note()
 
