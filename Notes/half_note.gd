@@ -1,6 +1,6 @@
 extends Note
 
-@export var tile_interval := 0.5
+@export var tile_interval := 1.0
 
 func _ready() -> void:
 	note_path = [
@@ -20,9 +20,6 @@ func _ready() -> void:
 		{"tile": Vector2i(-2,7), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-3,7), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-4,6), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-3,6), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-2,6), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-1,6), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(0,6), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(1,6), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(2,6), "sprite": fill_tile_atlas_coord},
@@ -33,29 +30,12 @@ func _ready() -> void:
 		{"tile": Vector2i(4,5), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(3,5), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(2,5), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(1,5), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(0,5), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-1,5), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-2,5), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-3,5), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-4,5), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-4,4), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-3,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-2,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-1,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(0,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(1,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(2,4), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(3,4), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(4,4), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(5,4), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(5,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(4,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(3,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(2,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(1,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(0,3), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(-1,3), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-2,3), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-3,3), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-4,3), "sprite": fill_tile_atlas_coord},
@@ -64,10 +44,6 @@ func _ready() -> void:
 		{"tile": Vector2i(-2,2), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(-1,2), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(0,2), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(1,2), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(2,2), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(3,2), "sprite": fill_tile_atlas_coord},
-		{"tile": Vector2i(4,2), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(5,2), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(5,1), "sprite": fill_tile_atlas_coord},
 		{"tile": Vector2i(4,1), "sprite": fill_tile_atlas_coord},

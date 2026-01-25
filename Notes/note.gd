@@ -6,9 +6,8 @@ class_name Note
 @onready var despair_detector := $DespairDetector
 
 @export var completion_progress := 0.0
-@export var tile_interval := 0.5
 
-
+var i_am_rest := false
 var note_processing := false
 var note_complete := false
 var note_to_render := 0
@@ -29,8 +28,7 @@ func toggle_detector() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	timer.wait_time = tile_interval
-	total_tiles = note_path.size()
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -64,4 +62,3 @@ func _physics_process(_delta: float) -> void:
 func _on_timer_timeout() -> void:
 	if note_to_render < note_path.size():
 		render_next = true
-

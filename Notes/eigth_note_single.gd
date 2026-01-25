@@ -1,5 +1,7 @@
 extends Note
 
+@export var tile_interval := 0.25
+
 func _ready() -> void:
 	note_path = [
 		# Note head

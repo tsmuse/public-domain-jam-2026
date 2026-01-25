@@ -4,7 +4,7 @@
 ~2. Stem-down Quarter Note~
 ~3. Single Eigth Note~
 ~4. Stem-down Single Eigth Note~
-5. Half-note
+~5. Half-note~
 6. Stem-down Half Note
 7. Whole note
 8. Single sixteenth note
@@ -22,5 +22,9 @@
 
 
 # Spacing (all measured from edge of stem/notehead)
+Measure start - 15 tiles
+Measure end - 19 tiles
+Half notes - 56 tiles
 Quarter notes - 29 tiles after
-Eigth notes - 
+Quarter rests - 17 tiles before and after
+Eigth notes - 21 tiles after

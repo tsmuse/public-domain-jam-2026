@@ -88,8 +88,10 @@ func _process(delta):
 		# print("measure not complete")
 		current_measure_complete = true
 		for i in range(bar.get_children().size()):
-			var current_note:Note = bar.get_children()[i]
-			if not current_note.note_complete:
+			var current_note = bar.get_children()[i]
+			if current_note.i_am_rest:
+				pass
+			elif not current_note.note_complete:
 				current_measure_complete = false
 				break
 	#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
@@ -179,13 +181,16 @@ func _on_bomba_boom(bomba:Node2D) -> void:
 func _toggle_notes_detectors() -> void:
 	var notes = bar.get_children()
 	for i in range(notes.size()):
-		notes[i].toggle_detector()
+		if not notes[i].i_am_rest:
+			notes[i].toggle_detector()
 
 func _start_notes_in_current_bar() -> void:
 	measure_has_started = true
 	despair_timer.start()
-	for i in range(bar.get_children().size()):
-		bar.get_children()[i].start_note()
+	var notes = bar.get_children()
+	for i in range(notes.size()):
+		if not notes[i].i_am_rest:  
+			bar.get_children()[i].start_note()
 
 func _set_current_bar() -> void:
 	despair.clear()
