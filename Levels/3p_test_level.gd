@@ -13,6 +13,7 @@ extends Node2D
 
 @onready var player := $Player
 @onready var controller := $Player/PlayerController
+@onready var next_level_pad := $NextLevel
 
 @onready var despair := $TileLayers/Despair
 @onready var despair_timer := $DespairTimer
@@ -68,10 +69,11 @@ func _process(delta):
 		static_monitoring = true
 	
 	if level_complete:
-		print("GAME OVER!")
+		print("GAME OVER?")
 		current_measure_complete = false
 		despair_should_grow = false
 		despair_timer.stop()
+		next_level_pad.visible = true
 		
 	if current_measure_complete:
 		print("measure complete")
@@ -158,6 +160,8 @@ func _physics_process(_delta: float) -> void:
 		if overlap.get_collision_layer_value(4) and not measure_has_started:
 			#print("Overlapping Start")
 			_start_notes_in_current_bar()
+		if overlap.get_collision_layer_value(4) and next_level_pad.visible:
+			print("goto NEXT LEVEL!!!")
 
 func _on_player_dropped_bomba(pos:Vector2) -> void:
 	var real_bomba = bomba_scn.instantiate()
