@@ -42,15 +42,19 @@ position = Vector2(1299, 624)
 
 [node name="QuarterNoteDown2" parent="Measures/Measure01" instance=ExtResource("4_q8ewy")]
 position = Vector2(1916, 623)
+beat = 2
 
 [node name="EigthNoteDown" parent="Measures/Measure01" instance=ExtResource("5_lkhsx")]
 position = Vector2(2286, 712)
+beat = 3
 
 [node name="EigthNoteDown2" parent="Measures/Measure01" instance=ExtResource("5_lkhsx")]
 position = Vector2(2693, 622)
+beat = 3
 
 [node name="QuarterNoteDown3" parent="Measures/Measure01" instance=ExtResource("4_q8ewy")]
 position = Vector2(3160, 711)
+beat = 4
 
 [node name="Measure02" type="Node2D" parent="Measures"]
 script = ExtResource("3_q8ewy")
@@ -62,15 +66,19 @@ position = Vector2(3868, 448)
 
 [node name="QuarterNote6" parent="Measures/Measure02" instance=ExtResource("4_lkhsx")]
 position = Vector2(4484, 448)
+beat = 2
 
 [node name="EigthNoteSingle" parent="Measures/Measure02" instance=ExtResource("5_e4abr")]
 position = Vector2(5108, 537)
+beat = 3
 
 [node name="EigthNoteSingle2" parent="Measures/Measure02" instance=ExtResource("5_e4abr")]
 position = Vector2(5604, 448)
+beat = 3
 
 [node name="QuarterNote7" parent="Measures/Measure02" instance=ExtResource("4_lkhsx")]
 position = Vector2(6116, 535)
+beat = 4
 
 [node name="Measure03" type="Node2D" parent="Measures"]
 script = ExtResource("3_q8ewy")
@@ -83,15 +91,19 @@ position = Vector2(6836, 624)
 
 [node name="QuarterNote2" parent="Measures/Measure03" instance=ExtResource("4_lkhsx")]
 position = Vector2(7460, 624)
+beat = 2
 
 [node name="EigthNoteSingle" parent="Measures/Measure03" instance=ExtResource("5_e4abr")]
 position = Vector2(8084, 713)
+beat = 3
 
 [node name="EigthNoteSingle2" parent="Measures/Measure03" instance=ExtResource("5_e4abr")]
 position = Vector2(8580, 623)
+beat = 3
 
 [node name="QuarterNote3" parent="Measures/Measure03" instance=ExtResource("4_lkhsx")]
 position = Vector2(9076, 713)
+beat = 4
 
 [node name="Measure04" type="Node2D" parent="Measures"]
 script = ExtResource("3_q8ewy")
@@ -104,6 +116,7 @@ position = Vector2(9796, 800)
 
 [node name="QuarterNoteDown" parent="Measures/Measure04" instance=ExtResource("4_q8ewy")]
 position = Vector2(10863, 615)
+beat = 3
 
 [node name="QuarterRest" parent="Measures/Measure04" instance=ExtResource("9_ejl65")]
 position = Vector2(10524, 30)
@@ -119,15 +132,19 @@ position = Vector2(12125, 890)
 
 [node name="QuarterNote2" parent="Measures/Measure05" instance=ExtResource("4_lkhsx")]
 position = Vector2(12756, 890)
+beat = 2
 
 [node name="EigthNoteSingle" parent="Measures/Measure05" instance=ExtResource("5_e4abr")]
 position = Vector2(13375, 800)
+beat = 3
 
 [node name="EigthNoteSingle2" parent="Measures/Measure05" instance=ExtResource("5_e4abr")]
 position = Vector2(14026, 888)
+beat = 3
 
 [node name="QuarterNote3" parent="Measures/Measure05" instance=ExtResource("4_lkhsx")]
 position = Vector2(14677, 800)
+beat = 4
 
 [node name="TileLayers" type="Node2D" parent="."]
 

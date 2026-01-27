@@ -6,6 +6,7 @@ class_name Note
 @onready var despair_detector := $DespairDetector
 
 @export var completion_progress := 0.0
+@export var beat := 1
 
 var i_am_rest := false
 var note_processing := false

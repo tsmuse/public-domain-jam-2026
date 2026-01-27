@@ -41,6 +41,9 @@ var last_velocity := Vector2.ZERO
 var static_monitoring := true
 
 var measure_label_string := "Measure %s of %s"
+var beat_warning_string_safe := "%s[font_size=\"32px\"]&[/font_size]"
+var beat_warning_string_warn := "[shake rate=20.0 level=15 connected=1][color=crimson]%s[font_size=\"32px\"]&[/font_size][/color][/shake]"
+
 
 func _on_area_2d_body_entered(body:Node2D) -> void:
 	print("%s is overlapping the test area!!!" % body.name)
@@ -102,13 +105,31 @@ func _process(_delta):
 	used_cells = despair.get_used_cells()
 	
 	if despair_should_grow:
-		# adjust composer resolve
+		# adjust composer resolve and update beat warning UI
 		for i in range(bar.get_children().size()):
 			var current_note = bar.get_children()[i]
 			if current_note.i_am_rest:
 				pass
 			elif not current_note.note_complete and not current_note.note_processing:
 				composer_resolve -= 1.0
+				if current_note.beat == 1:
+					beat_warning_1.text = beat_warning_string_warn % current_note.beat
+				elif current_note.beat == 2:
+					beat_warning_2.text = beat_warning_string_warn % current_note.beat
+				elif current_note.beat == 3:
+					beat_warning_3.text = beat_warning_string_warn % current_note.beat
+				elif current_note.beat == 4:
+					beat_warning_4.text = beat_warning_string_warn % current_note.beat
+			elif not current_note.note_complete and current_note.note_processing:
+				if current_note.beat == 1:
+					beat_warning_1.text = beat_warning_string_safe % current_note.beat
+				elif current_note.beat == 2:
+					beat_warning_2.text = beat_warning_string_safe % current_note.beat
+				elif current_note.beat == 3:
+					beat_warning_3.text = beat_warning_string_safe % current_note.beat
+				elif current_note.beat == 4:
+					beat_warning_4.text = beat_warning_string_safe % current_note.beat
+
 
 		# draw the despair tiles
 		var far_x = despair_start_coord.x + despair_rect_size.x
