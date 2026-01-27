@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://bweupordhxwg4"]
+[gd_scene load_steps=18 format=4 uid="uid://bweupordhxwg4"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_s187b"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_e4abr"]
@@ -18,6 +18,10 @@
 
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("9_xuthx")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sx0cy"]
+content_margin_left = 16.0
+content_margin_top = 16.0
 
 [node name="vocals_line_1" type="Node2D"]
 script = ExtResource("1_s187b")
@@ -165,84 +169,114 @@ follow_target = NodePath("../Player")
 tween_resource = SubResource("Resource_lrol0")
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
-[node name="UI" type="Control" parent="."]
+[node name="UILayer" type="CanvasLayer" parent="."]
+
+[node name="UI" type="Control" parent="UILayer"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UILayer/UI"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 61.0
+grow_horizontal = 2
+theme_override_constants/separation = 16
+
+[node name="MeasuresCounter" type="Label" parent="UILayer/UI/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sx0cy")
+text = "Measure N of Y"
+
+[node name="Beat Danger" type="HBoxContainer" parent="UILayer/UI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Beat1" type="RichTextLabel" parent="UILayer/UI/HBoxContainer/Beat Danger"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "1[font_size=\"32px\"]&[/font_size]"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Beat2" type="RichTextLabel" parent="UILayer/UI/HBoxContainer/Beat Danger"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "2[font_size=\"32px\"]&[/font_size]"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Beat3" type="RichTextLabel" parent="UILayer/UI/HBoxContainer/Beat Danger"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "3[font_size=\"32px\"]&[/font_size]"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="Beat4" type="RichTextLabel" parent="UILayer/UI/HBoxContainer/Beat Danger"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/normal_font_size = 64
+bbcode_enabled = true
+text = "4[font_size=\"32px\"]&[/font_size]"
+fit_content = true
+scroll_active = false
+shortcut_keys_enabled = false
+deselect_on_focus_loss_enabled = false
+drag_and_drop_selection_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UILayer/UI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UILayer/UI/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ComposerResolve" type="ProgressBar" parent="UILayer/UI/HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+step = 1.0
+value = 100.0
+rounded = true
+show_percentage = false
 
-[node name="velocity" type="Label" parent="UI"]
-layout_mode = 1
-offset_right = 66.0
-offset_bottom = 23.0
-text = "Velocity:"
-metadata/_edit_use_anchors_ = true
-
-[node name="settings" type="Label" parent="UI"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 1154.0
-offset_top = 2.0
-offset_right = 1194.0
-offset_bottom = 25.0
-grow_horizontal = 0
-
-[node name="player_pos" type="Label" parent="UI"]
-layout_mode = 0
-offset_top = 24.0
-offset_right = 158.0
-offset_bottom = 47.0
-text = "player pos: "
-
-[node name="Settings" type="Control" parent="UI"]
-layout_mode = 1
-anchor_left = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 1216.0
-offset_right = 1216.0
-grow_horizontal = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="UI/Settings"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -369.0
-offset_bottom = 140.0
-grow_horizontal = 0
-theme_override_constants/separation = 42
-
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/Settings/HBoxContainer"]
+[node name="Label2" type="Label" parent="UILayer/UI/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Movement" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 23
-text = "Movement"
-
-[node name="maxSpeed" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="maxAcel" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="maxDecel" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="turnSpeed" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="UI/Settings/HBoxContainer"]
-layout_mode = 2
-
-[node name="jumpHeight" type="Label" parent="UI/Settings/HBoxContainer/VBoxContainer2"]
+[node name="MarginContainer" type="MarginContainer" parent="UILayer/UI/HBoxContainer"]
 layout_mode = 2
 
 [node name="DespairTimer" type="Timer" parent="."]

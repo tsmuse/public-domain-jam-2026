@@ -1,16 +1,5 @@
 extends Node2D
 
-@onready var vel_label = $UI/velocity
-@onready var player_pos = $UI/player_pos
-
-@onready var speed_label = $UI/Settings/HBoxContainer/VBoxContainer/maxSpeed
-@onready var acel_label = $UI/Settings/HBoxContainer/VBoxContainer/maxAcel
-@onready var decel_label = $UI/Settings/HBoxContainer/VBoxContainer/maxDecel
-@onready var turn_label = $UI/Settings/HBoxContainer/VBoxContainer/turnSpeed
-
-@onready var jumph_label = $UI/Settings/HBoxContainer/VBoxContainer2/jumpHeight
-
-
 @onready var player := $Player
 @onready var controller := $Player/PlayerController
 @onready var next_level_pad := $NextLevel
@@ -20,7 +9,14 @@ extends Node2D
 
 @onready var measures := $Measures
 
-var composer_progress := 0.0
+@onready var measure_label := %MeasuresCounter
+@onready var beat_warning_1 := %Beat1
+@onready var beat_warning_2 := %Beat2
+@onready var beat_warning_3 := %Beat3
+@onready var beat_warning_4 := %Beat4
+@onready var composer_resolve_bar := %ComposerResolve
+
+var composer_resolve := 100.0
 var despair_count := 0
 var despair_source_id := 1
 var despair_atlas_coord := Vector2i(5,0)
@@ -37,39 +33,44 @@ var measure_has_started := false
 var bar: Node
 var current_measure_complete := false
 var level_complete := false
+var level_fail := false
 
 var bomba_scn = preload("res://Tools/bomba.tscn")
 
 var last_velocity := Vector2.ZERO
 var static_monitoring := true
 
+var measure_label_string := "Measure %s of %s"
+
 func _on_area_2d_body_entered(body:Node2D) -> void:
 	print("%s is overlapping the test area!!!" % body.name)
 
 func _ready():
 	player.player_dropped_bomba.connect(_on_player_dropped_bomba)
-	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
-	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
 	
-	speed_label.text = "Max Speed: %s" % controller.max_speed
-	acel_label.text = "Max Acel: %s" % controller.max_accel
-	decel_label.text = "Max Decl: %s" % controller.max_decel
-	turn_label.text = "Turn Speed: %s" % controller.turn_speed
-	
-	jumph_label.text = "Composer Progress: %s" % composer_progress
 	_set_current_bar()
+	composer_resolve_bar.value = composer_resolve
 	print("despair_start: %s, despair_rect_size: %s" % [despair_start_coord, despair_rect_size])
 	
 	
 
-func _process(delta):
-	
+func _process(_delta):
+	if not level_complete and not level_fail:
+		composer_resolve_bar.value = composer_resolve
+		if composer_resolve <= 0.0:
+			level_fail = true
+
 	if not static_monitoring:
 		_toggle_notes_detectors()
 		static_monitoring = true
+	if level_fail: 
+		print("GAME OVER!!!")
+		current_measure_complete = false
+		despair_should_grow = false
+		despair_timer.stop()
 	
 	if level_complete:
-		print("GAME OVER?")
+		print("Level OVER!!!")
 		current_measure_complete = false
 		despair_should_grow = false
 		despair_timer.stop()
@@ -97,11 +98,19 @@ func _process(delta):
 				current_measure_complete = false
 				break
 	#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
-	vel_label.text = "Velocity: (%2.3f,%2.3f)" % [player.velocity.x, player.velocity.y]
-	player_pos.text = "player pos (%2.3f,%2.3f)" % [player.position.x, player.position.y]
+
 	used_cells = despair.get_used_cells()
 	
 	if despair_should_grow:
+		# adjust composer resolve
+		for i in range(bar.get_children().size()):
+			var current_note = bar.get_children()[i]
+			if current_note.i_am_rest:
+				pass
+			elif not current_note.note_complete and not current_note.note_processing:
+				composer_resolve -= 1.0
+
+		# draw the despair tiles
 		var far_x = despair_start_coord.x + despair_rect_size.x
 		var far_y = despair_start_coord.y + despair_rect_size.y
 		# draw top rect line from start_coord to (far_x, start_coord.y)
@@ -122,8 +131,7 @@ func _process(delta):
 		static_monitoring = false
 	
 	despair_count = despair.get_used_cells().size()
-	composer_progress += (17.0 - (despair_count * 0.01)) * delta
-	jumph_label.text = "Composer Progress: %s" % composer_progress
+	
 	# enable these if you're actually changing them while the game it running
 	#speed_label.text = "Max Speed: %s" % controller.max_speed
 	#acel_label.text = "Max Acel: %s" % controller.max_accel
@@ -198,6 +206,7 @@ func _start_notes_in_current_bar() -> void:
 
 func _set_current_bar() -> void:
 	despair.clear()
+	measure_label.text = measure_label_string % [current_measure, measures.get_children().size()]
 	bar = measures.get_children()[current_measure]
 	despair_start_coord = bar.despair_rect_start
 	despair_rect_size = Vector2i(bar.despair_rect_length, bar.despair_rect_height)
