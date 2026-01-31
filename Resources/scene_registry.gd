@@ -13,4 +13,6 @@ const menus = {
 
 const levels = {
 	"test": "res://Levels/test_level.tscn",
+	"Lyric1": "res://Levels/vocals_line_1.tscn",
+	"Lyric2": "res://Levels/vocals_line_2.tscn",
 }

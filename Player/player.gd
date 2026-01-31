@@ -8,7 +8,6 @@ extends CharacterBody2D
 
 
 var temp := AnimatedSprite2D.new()
-var bomba_scn = preload("res://bomba.tscn")
 
 func _ready():
 	controller.init(self, temp)

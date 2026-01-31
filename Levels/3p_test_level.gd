@@ -16,6 +16,8 @@ extends Node2D
 @onready var beat_warning_4 := %Beat4
 @onready var composer_resolve_bar := %ComposerResolve
 
+@export var scene_number := 0
+
 var composer_resolve := 100.0
 var despair_count := 0
 var despair_source_id := 1
@@ -71,6 +73,7 @@ func _process(_delta):
 		current_measure_complete = false
 		despair_should_grow = false
 		despair_timer.stop()
+		# need a restart screen here
 	
 	if level_complete:
 		print("Level OVER!!!")
@@ -177,7 +180,7 @@ func _process(_delta):
 
 func _physics_process(_delta: float) -> void:
 	if player.despair_detector.has_overlapping_bodies():
-		var overlap = player.despair_detector.get_overlapping_bodies()[0]
+		#var overlap = player.despair_detector.get_overlapping_bodies()[0]
 		#print("Overlapping: %s" % overlap)
 		despair_to_clear_w_player = despair.local_to_map(player.global_position)
 		_clear_around_player(despair_to_clear_w_player)
@@ -191,6 +194,8 @@ func _physics_process(_delta: float) -> void:
 			_start_notes_in_current_bar()
 		if overlap.get_collision_layer_value(4) and next_level_pad.visible:
 			print("goto NEXT LEVEL!!!")
+			var next_level = "Lyric%s" % (scene_number + 1)
+			SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
 
 func _on_player_dropped_bomba(pos:Vector2) -> void:
 	var real_bomba = bomba_scn.instantiate()
