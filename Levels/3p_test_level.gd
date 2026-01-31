@@ -16,6 +16,7 @@ extends Node2D
 @onready var beat_warning_4 := %Beat4
 @onready var success_text := %SuccessText
 @onready var composer_resolve_bar := %ComposerResolve
+@onready var game_over_panel := %GameoverPanel
 
 @export var scene_number := 0
 
@@ -37,6 +38,7 @@ var bar: Node
 var current_measure_complete := false
 var level_complete := false
 var level_fail := false
+var game_overed := false
 
 var bomba_scn = preload("res://Tools/bomba.tscn")
 
@@ -62,142 +64,152 @@ func _ready():
 	
 
 func _process(_delta):
-	if not level_complete and not level_fail:
-		composer_resolve_bar.value = composer_resolve
-		if composer_resolve <= 0.0:
-			level_fail = true
+	if not game_overed:
+		if not level_complete and not level_fail:
+			composer_resolve_bar.value = composer_resolve
+			if composer_resolve <= 0.0:
+				level_fail = true
 
-	if not static_monitoring:
-		_toggle_notes_detectors()
-		static_monitoring = true
-	if level_fail: 
-		print("GAME OVER!!!")
-		current_measure_complete = false
-		despair_should_grow = false
-		despair_timer.stop()
-		# need a restart screen here
-	
-	if level_complete:
-		print("Level OVER!!!")
-		current_measure_complete = false
-		despair_should_grow = false
-		despair_timer.stop()
-		despair.clear()
-		beat_warning_1.visible = false
-		beat_warning_2.visible = false
-		beat_warning_3.visible = false
-		beat_warning_4.visible = false
-		success_text.visible = true
-		
-		next_level_pad.visible = true
-		
-	if current_measure_complete:
-		print("measure complete")
-		print("current_measure before update: %s" % current_measure)
-		current_measure += 1
-		beat_warning_1.text = beat_warning_string_complete % 1
-		beat_warning_2.text = beat_warning_string_complete % 2
-		beat_warning_3.text = beat_warning_string_complete % 3
-		beat_warning_4.text = beat_warning_string_complete % 4
-
-		if current_measure == measures.get_children().size():
-			level_complete = true
-		else:
+		if not static_monitoring:
+			_toggle_notes_detectors()
+			static_monitoring = true
+		if level_fail: 
+			print("GAME OVER!!!")
+			game_overed = true
+			player.queue_free()
 			current_measure_complete = false
-			_set_current_bar()
-			_start_notes_in_current_bar()
+			despair_should_grow = false
+			despair_timer.stop()
+			_flood_despair()
+			game_over_panel.visible = true
+		
+		if level_complete:
+			print("Level OVER!!!")
+			current_measure_complete = false
+			despair_should_grow = false
+			despair_timer.stop()
+			despair.clear()
+			beat_warning_1.visible = false
+			beat_warning_2.visible = false
+			beat_warning_3.visible = false
+			beat_warning_4.visible = false
+			success_text.visible = true
 
-	
-	if not current_measure_complete:
-		# print("measure not complete")
-		current_measure_complete = true
-		for i in range(bar.get_children().size()):
-			var current_note = bar.get_children()[i]
-			if current_note.i_am_rest:
-				pass
-			elif not current_note.note_complete:
+			next_level_pad.visible = true
+			
+		if current_measure_complete:
+			print("measure complete")
+			print("current_measure before update: %s" % current_measure)
+			current_measure += 1
+			beat_warning_1.text = beat_warning_string_complete % 1
+			beat_warning_2.text = beat_warning_string_complete % 2
+			beat_warning_3.text = beat_warning_string_complete % 3
+			beat_warning_4.text = beat_warning_string_complete % 4
+
+			if current_measure == measures.get_children().size():
+				level_complete = true
+			else:
 				current_measure_complete = false
-				break
-	#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
+				_set_current_bar()
+				_start_notes_in_current_bar()
 
-	used_cells = despair.get_used_cells()
-	
-	if despair_should_grow:
-		# adjust composer resolve and update beat warning UI
-		for i in range(bar.get_children().size()):
-			var current_note = bar.get_children()[i]
-			if current_note.i_am_rest:
-				pass
-			elif not current_note.note_complete and not current_note.note_processing:
-				composer_resolve -= 1.0
-				if current_note.beat == 1:
-					beat_warning_1.text = beat_warning_string_warn % current_note.beat
-				elif current_note.beat == 2:
-					beat_warning_2.text = beat_warning_string_warn % current_note.beat
-				elif current_note.beat == 3:
-					beat_warning_3.text = beat_warning_string_warn % current_note.beat
-				elif current_note.beat == 4:
-					beat_warning_4.text = beat_warning_string_warn % current_note.beat
-			elif not current_note.note_complete and current_note.note_processing:
-				if current_note.beat == 1:
-					beat_warning_1.text = beat_warning_string_safe % current_note.beat
-				elif current_note.beat == 2:
-					beat_warning_2.text = beat_warning_string_safe % current_note.beat
-				elif current_note.beat == 3:
-					beat_warning_3.text = beat_warning_string_safe % current_note.beat
-				elif current_note.beat == 4:
-					beat_warning_4.text = beat_warning_string_safe % current_note.beat
-			elif current_note.note_complete:
-				if current_note.beat == 1:
-					beat_warning_1.text = beat_warning_string_complete % current_note.beat
-				elif current_note.beat == 2:
-					beat_warning_2.text = beat_warning_string_complete % current_note.beat
-				elif current_note.beat == 3:
-					beat_warning_3.text = beat_warning_string_complete % current_note.beat
-				elif current_note.beat == 4:
-					beat_warning_4.text = beat_warning_string_complete % current_note.beat
+		
+		if not current_measure_complete:
+			# print("measure not complete")
+			current_measure_complete = true
+			for i in range(bar.get_children().size()):
+				var current_note = bar.get_children()[i]
+				if current_note.i_am_rest:
+					pass
+				elif not current_note.note_complete:
+					current_measure_complete = false
+					break
+		#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
+
+		used_cells = despair.get_used_cells()
+		
+		if despair_should_grow:
+			# adjust composer resolve and update beat warning UI
+			for i in range(bar.get_children().size()):
+				var current_note = bar.get_children()[i]
+				if current_note.i_am_rest:
+					pass
+				elif not current_note.note_complete and not current_note.note_processing:
+					composer_resolve -= 1.0
+					if current_note.beat == 1:
+						beat_warning_1.text = beat_warning_string_warn % current_note.beat
+					elif current_note.beat == 2:
+						beat_warning_2.text = beat_warning_string_warn % current_note.beat
+					elif current_note.beat == 3:
+						beat_warning_3.text = beat_warning_string_warn % current_note.beat
+					elif current_note.beat == 4:
+						beat_warning_4.text = beat_warning_string_warn % current_note.beat
+				elif not current_note.note_complete and current_note.note_processing:
+					if current_note.beat == 1:
+						beat_warning_1.text = beat_warning_string_safe % current_note.beat
+					elif current_note.beat == 2:
+						beat_warning_2.text = beat_warning_string_safe % current_note.beat
+					elif current_note.beat == 3:
+						beat_warning_3.text = beat_warning_string_safe % current_note.beat
+					elif current_note.beat == 4:
+						beat_warning_4.text = beat_warning_string_safe % current_note.beat
+				elif current_note.note_complete:
+					if current_note.beat == 1:
+						beat_warning_1.text = beat_warning_string_complete % current_note.beat
+					elif current_note.beat == 2:
+						beat_warning_2.text = beat_warning_string_complete % current_note.beat
+					elif current_note.beat == 3:
+						beat_warning_3.text = beat_warning_string_complete % current_note.beat
+					elif current_note.beat == 4:
+						beat_warning_4.text = beat_warning_string_complete % current_note.beat
 
 
-		# draw the despair tiles
-		var far_x = despair_start_coord.x + despair_rect_size.x
-		var far_y = despair_start_coord.y + despair_rect_size.y
-		# draw top rect line from start_coord to (far_x, start_coord.y)
-		_draw_despair_line(despair_start_coord, Vector2i(far_x, despair_start_coord.y))
-		# draw a right rect line from (far_x, start_coord.y) to (far_x, far_y)
-		_draw_despair_line(Vector2i(far_x, despair_start_coord.y), Vector2i(far_x,far_y))
-		# draw a bottom line from (far_x, far_y) to (start_coord.x, far_y)
-		_draw_despair_line(Vector2i(far_x,far_y), Vector2i(despair_start_coord.x, far_y))
-		# draw a left line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
-		_draw_despair_line(Vector2i(despair_start_coord.x,far_y), despair_start_coord)
+			# draw the despair tiles
+			var far_x = despair_start_coord.x + despair_rect_size.x
+			var far_y = despair_start_coord.y + despair_rect_size.y
+			# draw top rect line from start_coord to (far_x, start_coord.y)
+			_draw_despair_line(despair_start_coord, Vector2i(far_x, despair_start_coord.y))
+			# draw a right rect line from (far_x, start_coord.y) to (far_x, far_y)
+			_draw_despair_line(Vector2i(far_x, despair_start_coord.y), Vector2i(far_x,far_y))
+			# draw a bottom line from (far_x, far_y) to (start_coord.x, far_y)
+			_draw_despair_line(Vector2i(far_x,far_y), Vector2i(despair_start_coord.x, far_y))
+			# draw a left line from (start_coord.x + next_line.x, start_coord.y + next_line.y) to start_coord
+			_draw_despair_line(Vector2i(despair_start_coord.x,far_y), despair_start_coord)
 
-		despair_start_coord = despair_start_coord + Vector2i(1,1)
-		despair_rect_size = despair_rect_size - Vector2i(2,2)
-		despair_rects_drawn += 1
-		#print("despair_rects_drawn: %s" % despair_rects_drawn)
-		despair_should_grow = false
-		_toggle_notes_detectors()
-		static_monitoring = false
-	
-	despair_count = despair.get_used_cells().size()
+			despair_start_coord = despair_start_coord + Vector2i(1,1)
+			despair_rect_size = despair_rect_size - Vector2i(2,2)
+			despair_rects_drawn += 1
+			#print("despair_rects_drawn: %s" % despair_rects_drawn)
+			despair_should_grow = false
+			_toggle_notes_detectors()
+			static_monitoring = false
+		
+		despair_count = despair.get_used_cells().size()
 
 func _physics_process(_delta: float) -> void:
-	if player.despair_detector.has_overlapping_bodies():
-		#var overlap = player.despair_detector.get_overlapping_bodies()[0]
-		#print("Overlapping: %s" % overlap)
-		despair_to_clear_w_player = despair.local_to_map(player.global_position)
-		_clear_around_player(despair_to_clear_w_player)
-	
-	if player.despair_detector.has_overlapping_areas():
-		var overlap = player.despair_detector.get_overlapping_areas()[0]
-		#print("player overlapping some area: %s" % overlap)
-		#print("is area start? %s" % overlap.get_collision_layer_value(4))
-		if overlap.get_collision_layer_value(4) and not measure_has_started:
-			#print("Overlapping Start")
-			_start_notes_in_current_bar()
-		if overlap.get_collision_layer_value(4) and next_level_pad.visible:
-			print("goto NEXT LEVEL!!!")
-			var next_level = "Lyric%s" % (scene_number + 1)
-			SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
+	if not game_overed:
+		if player.despair_detector.has_overlapping_bodies():
+			#var overlap = player.despair_detector.get_overlapping_bodies()[0]
+			#print("Overlapping: %s" % overlap)
+			despair_to_clear_w_player = despair.local_to_map(player.global_position)
+			_clear_around_player(despair_to_clear_w_player)
+		
+		if player.despair_detector.has_overlapping_areas():
+			var overlap = player.despair_detector.get_overlapping_areas()[0]
+			#print("player overlapping some area: %s" % overlap)
+			#print("is area start? %s" % overlap.get_collision_layer_value(4))
+			if overlap.get_collision_layer_value(4) and not measure_has_started:
+				#print("Overlapping Start")
+				_start_notes_in_current_bar()
+			if overlap.get_collision_layer_value(4) and next_level_pad.visible:
+				print("goto NEXT LEVEL!!!")
+				var next_level = "Lyric%s" % (scene_number + 1)
+				SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
+
+func _flood_despair() -> void:
+	for x in range(101):
+		for y in range(51):
+			despair.set_cell(Vector2i(x,y), despair_source_id, despair_atlas_coord) 
 
 func _on_player_dropped_bomba(pos:Vector2) -> void:
 	var real_bomba = bomba_scn.instantiate()
@@ -441,3 +453,12 @@ func _draw_despair_line(line_start:Vector2i, line_end:Vector2i) -> void:
 				despair.set_cell(Vector2i(line_start.x + i, line_start.y), despair_source_id, despair_atlas_coord)
 			else:
 				despair.set_cell(Vector2i(line_start.x, line_start.y + i), despair_source_id, despair_atlas_coord)
+
+
+func _on_retry_button_pressed() -> void:
+	var next_level = "Lyric%s" % scene_number
+	SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
+
+
+func _on_quit_button_pressed() -> void:
+	SceneManager.swap_scenes(SceneRegistry.menus["StartScreen"], get_tree().root, self, "fade_to_black")
