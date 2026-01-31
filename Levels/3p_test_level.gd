@@ -17,6 +17,7 @@ extends Node2D
 @onready var success_text := %SuccessText
 @onready var composer_resolve_bar := %ComposerResolve
 @onready var game_over_panel := %GameoverPanel
+@onready var music_player := $MusicPlayer
 
 @export var scene_number := 0
 
@@ -50,19 +51,32 @@ var beat_warning_string_safe := "%s[font_size=\"32px\"]&[/font_size]"
 var beat_warning_string_complete := "[color=aqua]%s[font_size=\"32px\"]&[/font_size][/color]"
 var beat_warning_string_warn := "[shake rate=20.0 level=15 connected=1][color=crimson]%s[font_size=\"32px\"]&[/font_size][/color][/shake]"
 
-
-func _on_area_2d_body_entered(body:Node2D) -> void:
-	print("%s is overlapping the test area!!!" % body.name)
+var music_stream_path := "res://Music/lyric%s_%s.mp3"
+var streams_for_phrase := [null]
+var complete_phrase :AudioStreamMP3
 
 func _ready():
+	# connect bomba signal
 	player.player_dropped_bomba.connect(_on_player_dropped_bomba)
 	
-	_set_current_bar()
+	# load music files
+	for i in range(measures.get_children().size()):
+		var path = music_stream_path % [scene_number, i + 1]
+		streams_for_phrase.push_back(_load_mp3_stream(path))
+	
+	complete_phrase = _load_mp3_stream("res://Music/lyric%s_complete.mp3" % scene_number)
+	
+	# set up UI that doesn't get refreshed every measure
 	composer_resolve_bar.value = composer_resolve
-	print("despair_start: %s, despair_rect_size: %s" % [despair_start_coord, despair_rect_size])
-	
-	
 
+	# setup the first bar
+	_set_current_bar()
+	
+	# print("despair_start: %s, despair_rect_size: %s" % [despair_start_coord, despair_rect_size])
+
+	
+	
+	
 func _process(_delta):
 	if not game_overed:
 		if not level_complete and not level_fail:
@@ -85,6 +99,7 @@ func _process(_delta):
 		
 		if level_complete:
 			print("Level OVER!!!")
+			music_player.stream.loop = false
 			current_measure_complete = false
 			despair_should_grow = false
 			despair_timer.stop()
@@ -94,24 +109,29 @@ func _process(_delta):
 			beat_warning_3.visible = false
 			beat_warning_4.visible = false
 			success_text.visible = true
-
-			next_level_pad.visible = true
+			# pause here to play the music
+			if not music_player.playing:
+				music_player.stream = complete_phrase
+				music_player.play()
+				next_level_pad.visible = true
 			
 		if current_measure_complete:
 			print("measure complete")
 			print("current_measure before update: %s" % current_measure)
-			current_measure += 1
-			beat_warning_1.text = beat_warning_string_complete % 1
-			beat_warning_2.text = beat_warning_string_complete % 2
-			beat_warning_3.text = beat_warning_string_complete % 3
-			beat_warning_4.text = beat_warning_string_complete % 4
+			music_player.stream.loop = false
+			if not music_player.playing:
+				current_measure += 1
+				beat_warning_1.text = beat_warning_string_complete % 1
+				beat_warning_2.text = beat_warning_string_complete % 2
+				beat_warning_3.text = beat_warning_string_complete % 3
+				beat_warning_4.text = beat_warning_string_complete % 4
 
-			if current_measure == measures.get_children().size():
-				level_complete = true
-			else:
-				current_measure_complete = false
-				_set_current_bar()
-				_start_notes_in_current_bar()
+				if current_measure == measures.get_children().size():
+					level_complete = true
+				else:
+					current_measure_complete = false
+					_set_current_bar()
+					_start_notes_in_current_bar()
 
 		
 		if not current_measure_complete:
@@ -246,15 +266,35 @@ func _start_notes_in_current_bar() -> void:
 
 func _set_current_bar() -> void:
 	despair.clear()
-	measure_label.text = measure_label_string % [current_measure, measures.get_children().size()]
-	bar = measures.get_children()[current_measure]
-	despair_start_coord = bar.despair_rect_start
-	despair_rect_size = Vector2i(bar.despair_rect_length, bar.despair_rect_height)
-	despair_rects_drawn = 0
+	# set UI
+	measure_label.text = measure_label_string % [current_measure + 1, measures.get_children().size()]
 	beat_warning_1.text = beat_warning_string_safe % 1
 	beat_warning_2.text = beat_warning_string_safe % 2
 	beat_warning_3.text = beat_warning_string_safe % 3
 	beat_warning_4.text = beat_warning_string_safe % 4
+
+	# set bar used by process functions to find notes
+	bar = measures.get_children()[current_measure]
+	
+	# set properties for despair to draw around the current measure
+	despair_start_coord = bar.despair_rect_start
+	despair_rect_size = Vector2i(bar.despair_rect_length, bar.despair_rect_height)
+	despair_rects_drawn = 0
+
+	# set music to the appropriate segment
+	if current_measure != 0:
+		var next_stream = streams_for_phrase[current_measure]
+		if current_measure != streams_for_phrase.size() - 1:
+			next_stream.loop = true
+		
+		music_player.stream = next_stream
+		music_player.play()
+	
+func _load_mp3_stream(path) -> AudioStreamMP3:
+	var file = FileAccess.open(path, FileAccess.READ)
+	var stream = AudioStreamMP3.new()
+	stream.data = file.get_buffer(file.get_length())
+	return stream
 
 func _on_despair_timer_timeout() -> void:
 	despair_should_grow = true

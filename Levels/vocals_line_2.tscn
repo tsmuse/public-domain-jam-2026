@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://eljusuwbr1ot"]
+[gd_scene load_steps=24 format=4 uid="uid://eljusuwbr1ot"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_8hb2g"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_7lpc2"]
@@ -16,6 +16,12 @@
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="14_pvrgd"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="15_n2jui"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8hb2g"]
+size = Vector2(13522, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7lpc2"]
+size = Vector2(20, 1607)
+
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("15_n2jui")
 
@@ -29,6 +35,8 @@ bg_color = Color(0.34341636, 0.6017352, 0.96274656, 1)
 [sub_resource type="Theme" id="Theme_ob156"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jmfrr"]
+
+[sub_resource type="AudioStreamMP3" id="AudioStreamMP3_8hb2g"]
 
 [node name="vocals_line_2" type="Node2D"]
 script = ExtResource("1_8hb2g")
@@ -159,6 +167,46 @@ position = Vector2(867, 406)
 [node name="NextLevel" parent="." instance=ExtResource("11_3flfm")]
 position = Vector2(17921, 480)
 
+[node name="Boundaries" type="Node2D" parent="."]
+
+[node name="TopBoundary" type="StaticBody2D" parent="Boundaries"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/TopBoundary"]
+position = Vector2(6718, -366)
+shape = SubResource("RectangleShape2D_8hb2g")
+
+[node name="BottomBoundary" type="StaticBody2D" parent="Boundaries"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomBoundary"]
+position = Vector2(6718, 1198)
+shape = SubResource("RectangleShape2D_8hb2g")
+
+[node name="LeftBoundary" type="StaticBody2D" parent="Boundaries"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/LeftBoundary"]
+position = Vector2(0, 414.5)
+shape = SubResource("RectangleShape2D_7lpc2")
+
+[node name="RightBoundary" type="StaticBody2D" parent="Boundaries"]
+position = Vector2(12442, 0)
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RightBoundary"]
+position = Vector2(0, 414.5)
+shape = SubResource("RectangleShape2D_7lpc2")
+
+[node name="Lyrics" type="RichTextLabel" parent="."]
+offset_left = 1097.0
+offset_top = 960.0
+offset_right = 11789.0
+offset_bottom = 1550.0
+bbcode_enabled = true
+text = "[color=black][font_size=124]Walked      with       no      one;     and               		talked         with            		no         one,        And                  I                had           noth         ing          but              shad                       ows"
+scroll_active = false
+
 [node name="Player" parent="." instance=ExtResource("12_sysbx")]
 position = Vector2(707, 322)
 
@@ -166,6 +214,7 @@ position = Vector2(707, 322)
 physics_interpolation_mode = 1
 position = Vector2(707, 322)
 process_callback = 0
+editor_draw_limits = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D"]
 process_priority = 300
@@ -180,6 +229,7 @@ script = ExtResource("14_pvrgd")
 follow_mode = 5
 follow_target = NodePath("../Player")
 tween_resource = SubResource("Resource_lrol0")
+draw_limits = true
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
 [node name="UILayer" type="CanvasLayer" parent="."]
@@ -360,5 +410,8 @@ text = "Main Menu"
 
 [node name="DespairTimer" type="Timer" parent="."]
 wait_time = 1.75
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMP3_8hb2g")
 
 [connection signal="timeout" from="DespairTimer" to="." method="_on_despair_timer_timeout"]
