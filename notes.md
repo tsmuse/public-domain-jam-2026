@@ -28,6 +28,8 @@ Half notes - 56 tiles
 Quarter notes - 29 tiles after
 Quarter rests - 17 tiles before and after
 Eigth notes - 21 tiles after
+16th notes - 12 tiles after
+Whole note - 107 tiles for whole measure
 
 # Music
 "in-progress" music is at 130bpm - this is easier to listen to on a loop while the play is happening

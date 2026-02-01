@@ -1,0 +1,98 @@
+extends Note
+
+@export var tile_interval := 1.0
+
+func _ready() -> void:
+	note_path = [
+		# Note head
+		{"tile": Vector2i(-3,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-2,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-1,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(0,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(1,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(2,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-23), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(4,-22), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(0,-22), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-1,-22), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-2,-22), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-3,-22), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-22), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-21), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-3,-21), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-2,-21), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-1,-21), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(5,-21), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(5,-20), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(-2,-20), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-3,-20), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-20), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-19), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-3,-19), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(4,-19), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(5,-19), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(5,-18), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(4,-18), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-18), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(-4,-18), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-17), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(2,-17), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-17), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(4,-17), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(5,-17), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(5,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(4,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(2,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(1,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(0,-16), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(-4,-16), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-3,-15), "sprite": fill_tile_atlas_coord},
+		
+		{"tile": Vector2i(0,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(1,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(2,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(4,-15), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(3,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(2,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(1,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(0,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-1,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-2,-14), "sprite": fill_tile_atlas_coord},
+		# Note stem
+		{"tile": Vector2i(-4,-14), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-13), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-12), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-11), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-10), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-9), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-8), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-7), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-6), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-5), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-4), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-3), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-2), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,-1), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,0), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,1), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,2), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,3), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,4), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,5), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,6), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,7), "sprite": fill_tile_atlas_coord},
+		{"tile": Vector2i(-4,8), "sprite": fill_tile_atlas_coord},
+	]
+
+	total_tiles = note_path.size()
+	timer.wait_time = tile_interval

@@ -42,6 +42,7 @@ var current_measure_complete := false
 var level_complete := false
 var level_fail := false
 var game_overed := false
+var total_levels := 5 # this is so hackey
 
 var bomba_scn = preload("res://Tools/bomba.tscn")
 
@@ -239,8 +240,11 @@ func _physics_process(_delta: float) -> void:
 				start_level_pad.visible = false
 			if overlap.get_collision_layer_value(4) and next_level_pad.visible:
 				print("goto NEXT LEVEL!!!")
-				var next_level = "Lyric%s" % (scene_number + 1)
-				SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
+				if scene_number + 1 > total_levels:
+					SceneManager.swap_scenes(SceneRegistry.menus["StartScreen"], get_tree().root, self, "fade_to_black")	
+				else:
+					var next_level = "Lyric%s" % (scene_number + 1)
+					SceneManager.swap_scenes(SceneRegistry.levels[next_level], get_tree().root, self, "fade_to_black")
 
 func _flood_despair() -> void:
 	for x in range(101):
