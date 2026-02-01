@@ -18,7 +18,8 @@ extends Node2D
 @onready var success_text := %SuccessText
 @onready var composer_resolve_bar := %ComposerResolve
 @onready var game_over_panel := %GameoverPanel
-@onready var music_player := $MusicPlayer
+# @onready var music_player := $MusicPlayer
+@onready var music_group := $Music
 
 @export var scene_number := 0
 
@@ -53,19 +54,25 @@ var beat_warning_string_complete := "[color=aqua]%s[font_size=\"32px\"]&[/font_s
 var beat_warning_string_warn := "[shake rate=20.0 level=15 connected=1][color=crimson]%s[font_size=\"32px\"]&[/font_size][/color][/shake]"
 
 var music_stream_path := "res://Music/lyric%s_%s.mp3"
-var streams_for_phrase := [null]
-var complete_phrase :AudioStreamMP3
+var streams_for_phrase := []
+var current_stream :AudioStreamPlayer
 
 func _ready():
 	# connect bomba signal
 	player.player_dropped_bomba.connect(_on_player_dropped_bomba)
 	
 	# load music files
-	for i in range(measures.get_children().size()):
-		var path = music_stream_path % [scene_number, i + 1]
-		streams_for_phrase.push_back(_load_mp3_stream(path))
+	# This doesn't work on the web and since this is a web submission, I had to do it a worse way that worked
+	# for i in range(measures.get_children().size()):
+	# 	var path = music_stream_path % [scene_number, i + 1]
+	# 	streams_for_phrase.push_back(_load_mp3_stream(path))
+
+	# load music files the hackey way that works in the webbrowser
+	var music = music_group.get_children()
+	for i in range(music.size()):
+		streams_for_phrase.push_back(music[i])
 	
-	complete_phrase = _load_mp3_stream("res://Music/lyric%s_complete.mp3" % scene_number)
+	# complete_phrase = _load_mp3_stream("res://Music/lyric%s_complete.mp3" % scene_number)
 	
 	# set up UI that doesn't get refreshed every measure
 	composer_resolve_bar.value = composer_resolve
@@ -100,7 +107,7 @@ func _process(_delta):
 		
 		if level_complete:
 			print("Level OVER!!!")
-			music_player.stream.loop = false
+			# music_player.stream.loop = false
 			current_measure_complete = false
 			despair_should_grow = false
 			despair_timer.stop()
@@ -111,16 +118,20 @@ func _process(_delta):
 			beat_warning_4.visible = false
 			success_text.visible = true
 			# pause here to play the music
-			if not music_player.playing:
-				music_player.stream = complete_phrase
-				music_player.play()
+			# if not music_player.playing:
+				# music_player.stream = complete_phrase
+				# music_player.play()
+			if not current_stream.playing:
+				current_stream = streams_for_phrase.back()
+				current_stream.play()
 				next_level_pad.visible = true
 			
 		if current_measure_complete:
 			print("measure complete")
 			print("current_measure before update: %s" % current_measure)
-			music_player.stream.loop = false
-			if not music_player.playing:
+			if not current_stream.playing:
+			# music_player.stream.loop = false
+			# if not music_player.playing:
 				current_measure += 1
 				beat_warning_1.text = beat_warning_string_complete % 1
 				beat_warning_2.text = beat_warning_string_complete % 2
@@ -144,6 +155,8 @@ func _process(_delta):
 					pass
 				elif not current_note.note_complete:
 					current_measure_complete = false
+					if not current_stream.playing:
+						current_stream.play()
 					break
 		#print("test_area is overlapping despair? %s" % test_area.has_overlapping_bodies())
 
@@ -285,13 +298,11 @@ func _set_current_bar() -> void:
 	despair_rects_drawn = 0
 
 	# set music to the appropriate segment
-	if current_measure != 0:
-		var next_stream = streams_for_phrase[current_measure]
-		if current_measure != streams_for_phrase.size() - 1:
-			next_stream.loop = true
+	current_stream = streams_for_phrase[current_measure]
+	current_stream.play()
 		
-		music_player.stream = next_stream
-		music_player.play()
+		# music_player.stream = next_stream
+		# music_player.play()
 	
 func _load_mp3_stream(path) -> AudioStreamMP3:
 	var file = FileAccess.open(path, FileAccess.READ)

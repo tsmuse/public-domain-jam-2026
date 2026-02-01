@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cppy0hjpxq8pb"
-path="res://.godot/imported/Screenshot_20260124_150953.png-10637e06d56fd07ebc1557d84efc0acf.ctex"
+uid="uid://bexgvtcgyc8ex"
+path="res://.godot/imported/Early-sunday-morning-edward-hopper-1930.jpg-5b4c828a561aedc9c70ec6b3399be41f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Screenshot_20260124_150953.png"
-dest_files=["res://.godot/imported/Screenshot_20260124_150953.png-10637e06d56fd07ebc1557d84efc0acf.ctex"]
+source_file="res://Sprites/Early-sunday-morning-edward-hopper-1930.jpg"
+dest_files=["res://.godot/imported/Early-sunday-morning-edward-hopper-1930.jpg-5b4c828a561aedc9c70ec6b3399be41f.ctex"]
 
 [params]
 

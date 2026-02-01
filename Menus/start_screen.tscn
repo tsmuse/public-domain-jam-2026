@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://c4alor4j6s2dk"]
+[gd_scene load_steps=6 format=3 uid="uid://c4alor4j6s2dk"]
 
 [ext_resource type="Script" uid="uid://b2rx2i1by0d3n" path="res://Menus/start_screen.gd" id="1_ptl1s"]
+[ext_resource type="Texture2D" uid="uid://bexgvtcgyc8ex" path="res://Sprites/Early-sunday-morning-edward-hopper-1930.jpg" id="2_m8wbf"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m8wbf"]
+bg_color = Color(0.69803923, 0.19215687, 0.02745098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_505ve"]
+bg_color = Color(0.69803923, 0.19215687, 0.02745098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2dyvv"]
+bg_color = Color(0.69803923, 0.19215687, 0.02745098, 1)
 
 [node name="StartScreen" type="Control"]
 layout_mode = 3
@@ -10,6 +20,33 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ptl1s")
+
+[node name="BG" type="Sprite2D" parent="."]
+position = Vector2(654, 405.00003)
+scale = Vector2(1.1805756, 1.1805755)
+texture = ExtResource("2_m8wbf")
+
+[node name="Title" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 64.0
+offset_right = 1234.0
+offset_bottom = 414.0
+bbcode_enabled = true
+text = "[font size=128 bt=-40]Savin' the     Sunny Side"
+fit_content = true
+scroll_active = false
+
+[node name="Credit" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 890.0
+offset_top = 736.0
+offset_right = 1279.0
+offset_bottom = 776.0
+bbcode_enabled = true
+text = "[font size=16]\"Early Sunday Morning\" by Edward Hopper, 1930"
+fit_content = true
+scroll_active = false
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 1
@@ -27,14 +64,17 @@ grow_vertical = 0
 [node name="Start" type="Button" parent="GridContainer"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_m8wbf")
 text = "Start"
 
 [node name="Settings" type="Button" parent="GridContainer"]
 layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_505ve")
 text = "Settings"
 
 [node name="Quit" type="Button" parent="GridContainer"]
 layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_2dyvv")
 text = "Quit"
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
