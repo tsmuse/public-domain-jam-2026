@@ -21,10 +21,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ptl1s")
 
-[node name="BG" type="Sprite2D" parent="."]
-position = Vector2(654, 405.00003)
+[node name="BG" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(1.1805756, 1.1805755)
 texture = ExtResource("2_m8wbf")
+expand_mode = 2
 
 [node name="Title" type="RichTextLabel" parent="."]
 layout_mode = 0
@@ -38,11 +44,16 @@ fit_content = true
 scroll_active = false
 
 [node name="Credit" type="RichTextLabel" parent="."]
-layout_mode = 0
-offset_left = 890.0
-offset_top = 736.0
-offset_right = 1279.0
-offset_bottom = 776.0
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -389.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
 bbcode_enabled = true
 text = "[font size=16]\"Early Sunday Morning\" by Edward Hopper, 1930"
 fit_content = true
