@@ -1,6 +1,6 @@
 extends Note
 
-@export var tile_interval := 2.0
+@export var tile_interval := 4.0
 
 func _ready() -> void:
 	note_path = [

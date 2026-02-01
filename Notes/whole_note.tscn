@@ -11,6 +11,7 @@ size = Vector2(64.5, 124)
 
 [node name="WholeNote" type="Node2D"]
 script = ExtResource("1_4nvv1")
+tile_interval = 4.0
 
 [node name="placeholder_lines" type="TileMapLayer" parent="."]
 visible = false

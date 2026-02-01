@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://eljusuwbr1ot"]
+[gd_scene load_steps=26 format=4 uid="uid://eljusuwbr1ot"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_8hb2g"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_7lpc2"]
@@ -9,9 +9,14 @@
 [ext_resource type="PackedScene" uid="uid://cqvgpa5hmcxvb" path="res://Notes/start_clef.tscn" id="10_ngu3k"]
 [ext_resource type="PackedScene" uid="uid://dp22n0haup4aj" path="res://next_level.tscn" id="11_3flfm"]
 [ext_resource type="PackedScene" uid="uid://c30tdpt42w1cv" path="res://Player/player_3p.tscn" id="12_sysbx"]
+[ext_resource type="AudioStream" uid="uid://bsoe60v5vo56m" path="res://Music/lyric2_1.mp3" id="13_ob156"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="13_uvg1s"]
+[ext_resource type="AudioStream" uid="uid://bygfoydby66vr" path="res://Music/lyric2_2.mp3" id="14_jmfrr"]
 [ext_resource type="Script" uid="uid://bhexx6mj1xv3q" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="14_pvrgd"]
+[ext_resource type="AudioStream" uid="uid://druq54ubjxiye" path="res://Music/lyric2_3.mp3" id="15_iauye"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="15_n2jui"]
+[ext_resource type="AudioStream" uid="uid://dbrp8ppwgvrws" path="res://Music/lyric2_4.mp3" id="16_v8jof"]
+[ext_resource type="AudioStream" uid="uid://esiwb1xg1exg" path="res://Music/lyric2_complete.mp3" id="17_a1w3h"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8hb2g"]
 size = Vector2(13522, 48)
@@ -48,6 +53,7 @@ tile_set = ExtResource("2_7lpc2")
 [node name="Measure01" type="Node2D" parent="Measures"]
 script = ExtResource("3_ob156")
 despair_rect_length = 265
+despair_rect_height = 85
 metadata/_custom_type_script = "uid://cfwectu1w60r4"
 
 [node name="QuarterNote" parent="Measures/Measure01" instance=ExtResource("6_v8jof")]
@@ -74,6 +80,7 @@ position = Vector2(3575, 0)
 script = ExtResource("3_ob156")
 despair_rect_start = Vector2i(265, -16)
 despair_rect_length = 107
+despair_rect_height = 85
 
 [node name="WholeNote" parent="Measures/Measure02" instance=ExtResource("4_k2gbw")]
 position = Vector2(1052, 544)
@@ -84,6 +91,7 @@ position = Vector2(3575, 0)
 script = ExtResource("3_ob156")
 despair_rect_start = Vector2i(372, -16)
 despair_rect_length = 214
+despair_rect_height = 85
 
 [node name="QuarterNote5" parent="Measures/Measure03" instance=ExtResource("6_v8jof")]
 position = Vector2(2701, 534)
@@ -109,6 +117,7 @@ position = Vector2(3575, 0)
 script = ExtResource("3_ob156")
 despair_rect_start = Vector2i(576, -16)
 despair_rect_length = 107
+despair_rect_height = 85
 metadata/_custom_type_script = "uid://cfwectu1w60r4"
 
 [node name="WholeNote2" parent="Measures/Measure04" instance=ExtResource("4_k2gbw")]
@@ -385,6 +394,24 @@ wait_time = 1.75
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMP3_8hb2g")
-bus = &"Music"
+
+[node name="Music" type="Node2D" parent="."]
+
+[node name="EmptyMusic" type="AudioStreamPlayer" parent="Music"]
+
+[node name="Bar1Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("13_ob156")
+
+[node name="Bar2Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("14_jmfrr")
+
+[node name="Bar3Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("15_iauye")
+
+[node name="Bar4Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("16_v8jof")
+
+[node name="completeMusic" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("17_a1w3h")
 
 [connection signal="timeout" from="DespairTimer" to="." method="_on_despair_timer_timeout"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=4 uid="uid://bweupordhxwg4"]
+[gd_scene load_steps=29 format=4 uid="uid://bweupordhxwg4"]
 
 [ext_resource type="Script" uid="uid://ckq4dtk08m8rq" path="res://Levels/3p_test_level.gd" id="1_s187b"]
 [ext_resource type="TileSet" uid="uid://qomxqclj785q" path="res://Levels/tilesets/3p_level_test.tres" id="2_e4abr"]
@@ -15,6 +15,11 @@
 [ext_resource type="PackedScene" uid="uid://dfixe3di6pi7o" path="res://Notes/quarter_rest.tscn" id="9_ejl65"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="9_xuthx"]
 [ext_resource type="PackedScene" uid="uid://dp22n0haup4aj" path="res://next_level.tscn" id="11_sx0cy"]
+[ext_resource type="AudioStream" uid="uid://dr2lkgxjt0dnm" path="res://Music/lyric1_1.mp3" id="16_ydn87"]
+[ext_resource type="AudioStream" uid="uid://cv0dm148d22rv" path="res://Music/lyric1_2.mp3" id="17_jnnqb"]
+[ext_resource type="AudioStream" uid="uid://cqx876dlm4dae" path="res://Music/lyric1_3.mp3" id="18_4md15"]
+[ext_resource type="AudioStream" uid="uid://ic6gahv8tvg3" path="res://Music/lyric1_4.mp3" id="19_emkxc"]
+[ext_resource type="AudioStream" uid="uid://d4kiqsrpcwd57" path="res://Music/lyric1_complete.mp3" id="20_bmtu7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sx0cy"]
 size = Vector2(13522, 48)
@@ -407,7 +412,25 @@ wait_time = 1.75
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMP3_sx0cy")
-bus = &"Music"
+
+[node name="Music" type="Node2D" parent="."]
+
+[node name="EmptyMusic" type="AudioStreamPlayer" parent="Music"]
+
+[node name="Bar1Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("16_ydn87")
+
+[node name="Bar2Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("17_jnnqb")
+
+[node name="Bar3Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("18_4md15")
+
+[node name="Bar4Music" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("19_emkxc")
+
+[node name="completeMusic" type="AudioStreamPlayer" parent="Music"]
+stream = ExtResource("20_bmtu7")
 
 [connection signal="pressed" from="UILayer/UI/GameoverPanel/VBoxContainer/MarginContainer/VBoxContainer/RetryButton" to="." method="_on_retry_button_pressed"]
 [connection signal="pressed" from="UILayer/UI/GameoverPanel/VBoxContainer/MarginContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
