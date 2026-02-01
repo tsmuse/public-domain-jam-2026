@@ -20,7 +20,7 @@
 size = Vector2(13522, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ydn87"]
-size = Vector2(20, 1607)
+size = Vector2(20, 1669)
 
 [sub_resource type="Resource" id="Resource_lrol0"]
 script = ExtResource("9_xuthx")
@@ -167,14 +167,14 @@ shape = SubResource("RectangleShape2D_sx0cy")
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/BottomBoundary"]
-position = Vector2(6718, 1198)
+position = Vector2(6718, 1281)
 shape = SubResource("RectangleShape2D_sx0cy")
 
 [node name="LeftBoundary" type="StaticBody2D" parent="Boundaries"]
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/LeftBoundary"]
-position = Vector2(0, 414.5)
+position = Vector2(0, 451.5)
 shape = SubResource("RectangleShape2D_ydn87")
 
 [node name="RightBoundary" type="StaticBody2D" parent="Boundaries"]
@@ -182,14 +182,14 @@ position = Vector2(12442, 0)
 collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Boundaries/RightBoundary"]
-position = Vector2(0, 414.5)
+position = Vector2(0, 449.5)
 shape = SubResource("RectangleShape2D_ydn87")
 
 [node name="Lyrics" type="RichTextLabel" parent="."]
 offset_left = 1097.0
-offset_top = 960.0
+offset_top = 1041.0
 offset_right = 11789.0
-offset_bottom = 1550.0
+offset_bottom = 1631.0
 bbcode_enabled = true
 text = "[color=black][font_size=124]Walked      with       no      one;     and               		talked         with            		no         one,        And                  I                had           noth         ing          but              shad                       ows"
 scroll_active = false
@@ -203,7 +203,7 @@ position = Vector2(707, 322)
 process_callback = 0
 limit_left = 0
 limit_top = -350
-limit_bottom = 1250
+limit_bottom = 1300
 editor_draw_limits = true
 
 [node name="PhantomCameraHost" type="Node" parent="Camera2D"]
@@ -222,7 +222,7 @@ tween_resource = SubResource("Resource_lrol0")
 draw_limits = true
 limit_left = 0
 limit_top = -350
-limit_bottom = 1250
+limit_bottom = 1300
 metadata/_custom_type_script = "uid://bhexx6mj1xv3q"
 
 [node name="UILayer" type="CanvasLayer" parent="."]
