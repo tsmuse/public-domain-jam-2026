@@ -1,18 +1,68 @@
-[gd_scene load_steps=3 format=3 uid="uid://b820hkgxih3if"]
+[gd_scene load_steps=7 format=3 uid="uid://b820hkgxih3if"]
 
 [ext_resource type="Script" uid="uid://f5o8o6t3ulwb" path="res://Tools/bomba.gd" id="1_jlaks"]
-[ext_resource type="Texture2D" uid="uid://b6a0duqgp3uor" path="res://Sprites/tilemap-characters.png" id="2_ncxna"]
+[ext_resource type="Texture2D" uid="uid://dr1jr7070ndgm" path="res://Sprites/bomba_sheet.png" id="2_5yumh"]
+[ext_resource type="AudioStream" uid="uid://ckjd288f3644w" path="res://SFX/bomba.mp3" id="3_5yumh"]
+
+[sub_resource type="Animation" id="Animation_5yumh"]
+resource_name = "boom"
+length = 1.76
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.20620869, 0.4013986, 0.60288495, 0.8059454, 1.0042835, 1.6024462, 1.7031894, 1.76),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_px1kd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rvakt"]
+_data = {
+&"RESET": SubResource("Animation_px1kd"),
+&"boom": SubResource("Animation_5yumh")
+}
 
 [node name="Bomba" type="Node2D"]
 script = ExtResource("1_jlaks")
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
 one_shot = true
 autostart = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_ncxna")
-region_enabled = true
-region_rect = Rect2(78, 28, 18, 18)
+texture = ExtResource("2_5yumh")
+hframes = 10
+region_rect = Rect2(0, 0, 18, 18)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_5yumh")
+autoplay = true
+bus = &"SFX"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_rvakt")
+}
+autoplay = "boom"
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

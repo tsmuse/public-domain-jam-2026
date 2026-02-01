@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var player := $Player
 @onready var controller := $Player/PlayerController
+@onready var start_level_pad := $StartClef
 @onready var next_level_pad := $NextLevel
 
 @onready var despair := $TileLayers/Despair
