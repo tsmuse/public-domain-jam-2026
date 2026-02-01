@@ -219,9 +219,11 @@ func _physics_process(_delta: float) -> void:
 			var overlap = player.despair_detector.get_overlapping_areas()[0]
 			#print("player overlapping some area: %s" % overlap)
 			#print("is area start? %s" % overlap.get_collision_layer_value(4))
+			# Player standing on start pad
 			if overlap.get_collision_layer_value(4) and not measure_has_started:
 				#print("Overlapping Start")
 				_start_notes_in_current_bar()
+				start_level_pad.visible = false
 			if overlap.get_collision_layer_value(4) and next_level_pad.visible:
 				print("goto NEXT LEVEL!!!")
 				var next_level = "Lyric%s" % (scene_number + 1)

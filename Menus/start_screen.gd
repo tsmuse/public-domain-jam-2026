@@ -18,7 +18,7 @@ func _on_quit_button_up():
 	get_tree().quit()
 
 func _on_start_button_up():
-	SceneManager.swap_scenes(SceneRegistry.levels["test"], get_tree().root, self, "fade_to_black")
+	SceneManager.swap_scenes(SceneRegistry.levels["Lyric1"], get_tree().root, self, "fade_to_black")
 
 func _on_settings_button_up():
 	SceneManager.swap_scenes(SceneRegistry.menus["SettingsMenu"], get_tree().root, null, "no_transition")
