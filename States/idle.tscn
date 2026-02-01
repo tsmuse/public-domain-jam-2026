@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://8jr8n02pbw7g"]
-
-[ext_resource type="Script" uid="uid://buacym3tndtis" path="res://States/player_idle.gd" id="1_6fnlt"]
-
-[node name="idle" type="Node" node_paths=PackedStringArray("run_state", "jump_state", "fall_state")]
-script = ExtResource("1_6fnlt")
-run_state = NodePath("")
-jump_state = NodePath("")
-fall_state = NodePath("")
